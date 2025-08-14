@@ -134,7 +134,7 @@ nullModelDistributionStatistics <- function(observedValue,
 
 ## Step 2. Function: SKR ANALYSIS ----
 
-#' @title Launch the analysis of the TADs
+#' @title Launch the analysis of the TADs with the SKR framework
 #' @description Launch the SKR analysis of the TADs, and generate output dataset
 #' @concept tad
 #' @param weights the dataframe of weights, one row correspond to a series of observation
@@ -144,28 +144,21 @@ nullModelDistributionStatistics <- function(observedValue,
 #' @param aggregationFactorName vector of factor name for the generation of random matrix
 #' @param statisticsFactorName vector of factor name for the computation of statistics for each generated matrix
 #' @param seed the seed of the pseudo random number generator
-#' @param abundanceDataFrameRDS the path and name of the RDS file to load/save the dataframe which
-#' contains the observed data and the generated matrix
-#' @param weightedMomentsDataFrameRDS the path and name of the RDS file to load/save the dataframe which
-#' contains the calculated moments
-#' @param statPerObsDataFrameRDS the path and name of the RDS file to load/save the dataframe which
-#' contains the statistics for each observed row regarding the random ones
-#' @param statPerRandDataFrameRDS the path and name of the RDS file to load/save the dataframe which
-#' contains the statistics for each random matrix generated
-#' @param statSKRparam the path and name of the RDS file to load/save the dataframe which
-#' contains the SKR statistics
+#' @param abundanceDataFrameRDS the path and name of the RDS file to load/save the dataframe which contains the observed data and the generated matrix
+#' @param weightedMomentsDataFrameRDS the path and name of the RDS file to load/save the dataframe which contains the calculated moments
+#' @param statPerObsDataFrameRDS the path and name of the RDS file to load/save the dataframe which contains the statistics for each observed row regarding the random ones
+#' @param statPerRandDataFrameRDS the path and name of the RDS file to load/save the dataframe which contains the statistics for each random matrix generated
+#' @param statSKRparam the path and name of the RDS file to load/save the dataframe which contains the SKR statistics
 #' @param regenerateAbundanceDataFrame boolean to specify if the abundance dataframe is computed again
 #' @param regenerateWeightedMomentsDataFrame boolean to specify if the weighted moments dataframe is computed again
-#' @param regenerateStatPerObsDataFrame boolean to specify if
-#' the statistics per observation dataframe is computed again
-#' @param regenerateStatPerRandDataFrame boolean to specify if
-#' the statistics per random matrix dataframe is computed again
-#' @param significativityThreshold the significance threshold to
-#' consider that the observed value is in the randomized value
+#' @param regenerateStatPerObsDataFrame boolean to specify if the statistics per observation dataframe is computed again
+#' @param regenerateStatPerRandDataFrame boolean to specify if the statistics per random matrix dataframe is computed again
+#' @param significativityThreshold the significance threshold to consider that the observed value is in the randomized value
 #' @param doParallel Indicates if we use parallelism to construct the random matrix
-#' @param slope_distance Indicates if we use parallelism to construct the random matrix
-#' @param intercept_distance Indicates if we use parallelism to construct the random matrix
+#' @param slope_speTADs slope of a specific SKR used as a baseline (default: slope_speTADs = 1; skew-uniform slope)
+#' @param intercept_speTADs intercept of a specific SKR used as a baseline (default: intercept_speTADs = 1.86; skew-uniform intercept)
 #' @param lin_mod Indicates the type of linear model to use for (SKR): choose "lm" or "mblm"
+#' @param distance_metric Indicates the method to compute distance-based regression parameters: choose "RMSE" (for Root Mean Square Error, default) or "MAE" (for Mean Absolute Error)
 #' @export
 
 DataAnalysisTAD <- function(
@@ -188,8 +181,9 @@ DataAnalysisTAD <- function(
     significativityThreshold = c(0.05, 0.95),
     doParallel = TRUE,
     lin_mod = "lm",
-    slope_distance = 1,
-    intercept_distance = 1.86
+    slope_speTADs = 1,
+    intercept_speTADs = 1.86,
+    distance_metric = "RMSE"
 ) {
   
   # preliminary test on input data
@@ -263,7 +257,7 @@ DataAnalysisTAD <- function(
     weightedMoments$skewness <- weightedMomentsList[["skewness"]]
     weightedMoments$kurtosis <- weightedMomentsList[["kurtosis"]]
     rm(weightedMomentsList)
-    weightedMoments$distanceLaw<- weightedMoments$kurtosis - (slope_distance*weightedMoments$skewness*weightedMoments$skewness + intercept_distance)
+    weightedMoments$distance_speTADs <- weightedMoments$kurtosis - (slope_speTADs*weightedMoments$skewness*weightedMoments$skewness + intercept_speTADs)
     
     weightedMoments <-
       cbind(weightsFactor[rep(x = seq_len(nrow(weightsFactor)), times = randomizationNumber + 1), ,
@@ -347,7 +341,7 @@ DataAnalysisTAD <- function(
     lengthFactor <- length(names(statisticsFactorSpeciesList))
     abundanceDataframe$skewness <- weightedMoments$skewness
     abundanceDataframe$kurtosis <- weightedMoments$kurtosis
-    abundanceDataframe$distanceLaw <- weightedMoments$distanceLaw
+    abundanceDataframe$distance_speTADs <- weightedMoments$distance_speTADs
     
     for (i in 0:randomizationNumber) {
       for (j in 1:lengthFactor) {
@@ -360,7 +354,7 @@ DataAnalysisTAD <- function(
         dfToAnalyze <- dfToAnalyze[which(x = statisticsId == names(statisticsFactorSpeciesList)[j]), ]
         y <- dfToAnalyze$kurtosis
         x <- dfToAnalyze$skewness^2
-        distLaw <- dfToAnalyze$distanceLaw^2
+        distance_speTADs <- dfToAnalyze$distance_speTADs^2
         
         # for lintr
         if(lin_mod == "lm"){
@@ -375,9 +369,14 @@ DataAnalysisTAD <- function(
         statisticsPerRandom$Intercept[i * lengthFactor + j] <- fit$coefficients[1]
         statisticsPerRandom$Rsquare[i * lengthFactor + j] <-
           1 - (mean(stats::residuals(fit)^2, na.rm = TRUE) / stats::var(y, na.rm = TRUE))
-        statisticsPerRandom$RMSE[i * lengthFactor + j] <- sqrt(mean(fit$residuals^2, na.rm = TRUE))
-        statisticsPerRandom$Mean_distLaw[i * lengthFactor + j] <- sqrt(mean(distLaw, na.rm = T))
-        statisticsPerRandom$CV_distLaw[i * lengthFactor + j] <- sd(distLaw, na.rm = T)*100/mean(distLaw, na.rm = T)
+        if(distance_metric == "RMSE"){
+          statisticsPerRandom$distance_predicted_TADs[i * lengthFactor + j] <- sqrt(mean(fit$residuals^2, na.rm = TRUE))
+          statisticsPerRandom$distance_specific_TADs[i * lengthFactor + j] <- sqrt(mean(distance_speTADs, na.rm = T))
+        }else if (distance_metric == "MAE"){
+          statisticsPerRandom$distance_predicted_TADs[i * lengthFactor + j] <- mean(sqrt(fit$residuals^2), na.rm = TRUE)
+          statisticsPerRandom$distance_specific_TADs[i * lengthFactor + j] <- mean(sqrt(distance_speTADs), na.rm = T)
+        }
+        statisticsPerRandom$CV_distance_specific_TADs[i * lengthFactor + j] <- sd(sqrt(distance_speTADs), na.rm = T)*100/mean(sqrt(distance_speTADs), na.rm = T)
       }
     }
     
@@ -387,7 +386,6 @@ DataAnalysisTAD <- function(
   }else {
     statisticsPerRandom <- readRDS(file = statPerRandDataFrameRDS)
   }
-  
   # Compute SES of the SKR parameters
   SKRparam <- readRDS(file = statPerRandDataFrameRDS)
   SES_SKR <- data.frame()
@@ -418,29 +416,29 @@ DataAnalysisTAD <- function(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$Rsquare,
                          randomValues = SKRparam[SKRparam$Number > 0,]$Rsquare,
                          significanceThreshold = significativityThreshold)[[4]][1],
-                       RMSE_SES = nullModelDistributionStatistics(
-                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$RMSE,
-                         randomValues = SKRparam[SKRparam$Number > 0,]$RMSE,
+                       distance_predicted_TADs_SES = nullModelDistributionStatistics(
+                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$distance_predicted_TADs,
+                         randomValues = SKRparam[SKRparam$Number > 0,]$distance_predicted_TADs,
                          significanceThreshold = significativityThreshold)[[1]][1],
-                       RMSE_Signi = nullModelDistributionStatistics(
-                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$RMSE,
-                         randomValues = SKRparam[SKRparam$Number > 0,]$RMSE,
+                       distance_predicted_TADs_Signi = nullModelDistributionStatistics(
+                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$distance_predicted_TADs,
+                         randomValues = SKRparam[SKRparam$Number > 0,]$distance_predicted_TADs,
                          significanceThreshold = significativityThreshold)[[4]][1],
-                       Mean_distLaw_SES = nullModelDistributionStatistics(
-                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$Mean_distLaw,
-                         randomValues = SKRparam[SKRparam$Number > 0,]$Mean_distLaw,
+                       distance_specific_TADs_SES = nullModelDistributionStatistics(
+                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$distance_specific_TADs,
+                         randomValues = SKRparam[SKRparam$Number > 0,]$distance_specific_TADs,
                          significanceThreshold = significativityThreshold)[[1]][1],
-                       Mean_distLaw_Signi = nullModelDistributionStatistics(
-                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$Mean_distLaw,
-                         randomValues = SKRparam[SKRparam$Number > 0,]$Mean_distLaw,
+                       distance_specific_TADs_Signi = nullModelDistributionStatistics(
+                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$distance_specific_TADs,
+                         randomValues = SKRparam[SKRparam$Number > 0,]$distance_specific_TADs,
                          significanceThreshold = significativityThreshold)[[4]][1],
-                       CV_distLaw_SES = nullModelDistributionStatistics(
-                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$CV_distLaw,
-                         randomValues = SKRparam[SKRparam$Number > 0,]$CV_distLaw,
+                       CV_distance_specific_TADs_SES = nullModelDistributionStatistics(
+                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$CV_distance_specific_TADs,
+                         randomValues = SKRparam[SKRparam$Number > 0,]$CV_distance_specific_TADs,
                          significanceThreshold = significativityThreshold)[[1]][1],
-                       CV_distLaw_Signi = nullModelDistributionStatistics(
-                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$CV_distLaw,
-                         randomValues = SKRparam[SKRparam$Number > 0,]$CV_distLaw,
+                       CV_distance_specific_TADs_Signi = nullModelDistributionStatistics(
+                         observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$CV_distance_specific_TADs,
+                         randomValues = SKRparam[SKRparam$Number > 0,]$CV_distance_specific_TADs,
                          significanceThreshold = significativityThreshold)[[4]][1],
                        statisticsFactorName = i))
   }
@@ -476,7 +474,7 @@ GraphMoments <- function(MOM,
                                             col = "black", fill = "lightgrey", alpha = 0.4)+
                       ggplot2::geom_point(data = MOM %>% 
                                             dplyr::filter(Number == 0), 
-                                          ggplot2::aes(x = "Mean", y = mean, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Mean", y = mean, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.4, position = "jitter")+
                       ggplot2::scale_fill_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
                       ggplot2::scale_color_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
@@ -497,7 +495,7 @@ GraphMoments <- function(MOM,
                                             col = "black", fill = "lightgrey", alpha = 0.4)+
                       ggplot2::geom_point(data = MOM %>% 
                                             dplyr::filter(Number == 0), 
-                                          ggplot2::aes(x = "Variance", y = variance, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Variance", y = variance, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.4, position = "jitter")+
                       ggplot2::scale_fill_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
                       ggplot2::scale_color_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
@@ -518,7 +516,7 @@ GraphMoments <- function(MOM,
                                             col = "black", fill = "lightgrey", alpha = 0.4)+
                       ggplot2::geom_point(data = MOM %>% 
                                             dplyr::filter(Number == 0), 
-                                          ggplot2::aes(x = "Skewness", y = skewness, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Skewness", y = skewness, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.4, position = "jitter")+
                       ggplot2::scale_fill_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
                       ggplot2::scale_color_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
@@ -539,7 +537,7 @@ GraphMoments <- function(MOM,
                                             col = "black", fill = "lightgrey", alpha = 0.4)+
                       ggplot2::geom_point(data = MOM %>% 
                                             dplyr::filter(Number == 0), 
-                                          ggplot2::aes(x = "Kurtosis", y = kurtosis, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Kurtosis", y = kurtosis, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.4, position = "jitter")+
                       ggplot2::scale_fill_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
                       ggplot2::scale_color_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
@@ -557,11 +555,11 @@ GraphMoments <- function(MOM,
                       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
                       ggplot2::geom_point(data = SESMOM %>% 
                                             dplyr::filter(significanceMean == "TRUE"), 
-                                          ggplot2::aes(x = "Mean", y = standardizedObservedMean, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Mean", y = standardizedObservedMean, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.8, position = "jitter")+
                       ggplot2::geom_point(data = SESMOM %>% 
                                             dplyr::filter(significanceMean == "FALSE"), 
-                                          ggplot2::aes(x = "Mean", y = standardizedObservedMean, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Mean", y = standardizedObservedMean, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.2, position = "jitter")+
                       ggplot2::scale_fill_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
                       ggplot2::scale_color_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
@@ -579,11 +577,11 @@ GraphMoments <- function(MOM,
                       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
                       ggplot2::geom_point(data = SESMOM %>% 
                                             dplyr::filter(significanceVariance == "TRUE"), 
-                                          ggplot2::aes(x = "Variance", y = standardizedObservedVariance, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Variance", y = standardizedObservedVariance, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.8, position = "jitter")+
                       ggplot2::geom_point(data = SESMOM %>% 
                                             dplyr::filter(significanceVariance == "FALSE"), 
-                                          ggplot2::aes(x = "Variance", y = standardizedObservedVariance, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Variance", y = standardizedObservedVariance, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.2, position = "jitter")+
                       ggplot2::scale_fill_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
                       ggplot2::scale_color_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
@@ -601,11 +599,11 @@ GraphMoments <- function(MOM,
                       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
                       ggplot2::geom_point(data = SESMOM %>% 
                                             dplyr::filter(significanceSkewness == "TRUE"), 
-                                          ggplot2::aes(x = "Skewness", y = standardizedObservedSkewness, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Skewness", y = standardizedObservedSkewness, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.8, position = "jitter")+
                       ggplot2::geom_point(data = SESMOM %>% 
                                             dplyr::filter(significanceSkewness == "FALSE"), 
-                                          ggplot2::aes(x = "Skewness", y = standardizedObservedSkewness, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Skewness", y = standardizedObservedSkewness, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.2, position = "jitter")+
                       ggplot2::scale_fill_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
                       ggplot2::scale_color_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
@@ -623,11 +621,11 @@ GraphMoments <- function(MOM,
                       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
                       ggplot2::geom_point(data = SESMOM %>% 
                                             dplyr::filter(significanceKurtosis == "TRUE"), 
-                                          ggplot2::aes(x = "Kurtosis", y = standardizedObservedKurtosis, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Kurtosis", y = standardizedObservedKurtosis, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.8, position = "jitter")+
                       ggplot2::geom_point(data = SESMOM %>% 
                                             dplyr::filter(significanceKurtosis == "FALSE"), 
-                                          ggplot2::aes(x = "Kurtosis", y = standardizedObservedKurtosis, col = !!sym(statisticsFactorName), fill = !!sym(statisticsFactorName)), 
+                                          ggplot2::aes(x = "Kurtosis", y = standardizedObservedKurtosis, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                           shape = 21, size = 4, alpha = 0.2, position = "jitter")+
                       ggplot2::scale_fill_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
                       ggplot2::scale_color_manual(values = statisticsFactorNameCol, limits = statisticsFactorNameBreaks)+
@@ -659,8 +657,8 @@ GraphMoments <- function(MOM,
 #' @param statisticsFactorName column of data use for colors discrimination
 #' @param statisticsFactorNameBreaks vector of factor levels of the statisticsFactorName, same dimension than statisticsFactorNameCol
 #' @param statisticsFactorNameCol vector of colors, same dimension than statisticsFactorNameBreaks
-#' @param slope_distance slope of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)
-#' @param intercept_distance intercept of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)
+#' @param slope_speTADs slope of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)
+#' @param intercept_speTADs intercept of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)
 #' @param saveGraphSKR The path to save the graph
 #' @export
 
@@ -669,8 +667,8 @@ GraphSKR <- function(
     statisticsFactorName,
     statisticsFactorNameBreaks = NULL,
     statisticsFactorNameCol = palette(),
-    slope_distance = 1,
-    intercept_distance = 1.86,
+    slope_speTADs = 1,
+    intercept_speTADs = 1.86,
     saveGraphSKR
 ) {
   ggplot2::ggsave(saveGraphSKR,
@@ -683,7 +681,7 @@ GraphSKR <- function(
                                            dplyr::filter(Number > 0),
                                          ggplot2::aes(x = skewness**2, y = kurtosis, group = Number), 
                                          col = "#D3D3D3", fill = "#D3D3D3", se = F, method = "lm", formula = y ~ x, linetype = 1, linewidth = 0.5, alpha = 0.1)+
-                    ggplot2::geom_abline(intercept = intercept_distance, slope = slope_distance, linetype = "dashed", linewidth = 2) +
+                    ggplot2::geom_abline(intercept = intercept_speTADs, slope = slope_speTADs, linetype = "dashed", linewidth = 2) +
                     ggplot2::geom_point(data = MOM %>% 
                                           dplyr::filter(Number == 0),
                                         ggplot2::aes(x = skewness**2, y = kurtosis, fill = !!rlang::sym(statisticsFactorName)), 
@@ -693,9 +691,9 @@ GraphSKR <- function(
                                          ggplot2::aes(x = skewness**2, y = kurtosis, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)), 
                                          se = F, method = "lm", formula = y ~ x, linetype = 1, linewidth = 2, alpha = 0.1)+
                     ggpubr::stat_regline_equation(data = MOM %>% 
-                                                    dplyr::filter(Number == 0),
-                                                  ggplot2::aes(x = skewness**2, y = kurtosis, col = !!rlang::sym(statisticsFactorName)),
-                                                  alpha = 1, size = 8)+
+                                            filter(Number == 0),
+                                          aes(skewness**2, y = kurtosis, label =  paste(after_stat(eq.label), after_stat(rr.label), sep = "~~~~"), col = !!rlang::sym(statisticsFactorName)),
+                                          alpha = 1, size = 8)+
                     ggplot2::scale_fill_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
                     ggplot2::scale_color_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
                     ggplot2::xlim(0, 10)+
@@ -717,97 +715,89 @@ GraphSKR <- function(
 ### c. Parameters of the SKR ----
 
 #' @title Graph: parameters of the SKR
-#' @param SKRparam SES of SKR parameters data frame (SES and Significance)
+#' @param data SES of SKR parameters data frame (SES and Significance)
 #' @param statisticsFactorName column of data use for colors discrimination
 #' @param statisticsFactorNameBreaks vector of factor levels of the statisticsFactorName, same dimension than statisticsFactorNameCol
 #' @param statisticsFactorNameCol vector of colors, same dimension than statisticsFactorNameBreaks
-#' @param slope_distance slope of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)
-#' @param intercept_distance intercept of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)
 #' @param saveGraphparamSKR The path to save the graph
+#' @param slope_speTADs slope of a specific SKR used as a baseline (default: slope_speTADs = 1; skew-uniform slope)
+#' @param intercept_speTADs intercept of a specific SKR used as a baseline (default: intercept_speTADs = 1.86; skew-uniform intercept)
 #' @export
 
 GraphparamSKR <- function(SKRparam,
                           statisticsFactorName,
                           statisticsFactorNameBreaks = NULL,
                           statisticsFactorNameCol = palette(),
-                          slope_distance = 1,
-                          intercept_distance = 1.86,
+                          slope_speTADs = 1,
+                          intercept_speTADs = 1.86,
                           saveGraphparamSKR) {
   
-  if(slope_distance == 1 & intercept_distance == 1.86){
-    title_dist_law <- "distance to 
-Skew-Uniform"
-  }else if (slope_distance == 1 & intercept_distance == 1){
-    title_dist_law <- "distance to 
-Lower Boundary"
-  }else{
-    title_dist_law <- paste0("distance to 
-K = ", slope_distance, " x S² + ", intercept_distance)
-  }
+  title_dist_speTADs <- paste0("Distance from specific TADs:
+K = ", slope_speTADs, " x S² + ", intercept_speTADs)
   
   ggplot2::ggsave(
     saveGraphparamSKR,
     ggplot2::ggplot()+
       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(Slope_Signi == TRUE), 
-                          ggplot2::aes(x =  "Slope", y = Slope_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.8, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(Slope_Signi == TRUE), 
+                   ggplot2::aes(x =  "Slope", y = Slope_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.8, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(Slope_Signi == FALSE), 
-                          ggplot2::aes(x =  "Slope", y = Slope_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.2, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(Slope_Signi == FALSE), 
+                   ggplot2::aes(x =  "Slope", y = Slope_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.2, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(Intercept_Signi == TRUE), 
-                          ggplot2::aes(x =  "Intercept", y = Intercept_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.8, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(Intercept_Signi == TRUE), 
+                   ggplot2::aes(x =  "Intercept", y = Intercept_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.8, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(Intercept_Signi == FALSE), 
-                          ggplot2::aes(x =  "Intercept", y = Intercept_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.2, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(Intercept_Signi == FALSE), 
+                   ggplot2::aes(x =  "Intercept", y = Intercept_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.2, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(Rsquare_Signi == TRUE), 
-                          ggplot2::aes(x =  "R²", y = Rsquare_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.8, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(Rsquare_Signi == TRUE), 
+                   ggplot2::aes(x =  "R²", y = Rsquare_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.8, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(Rsquare_Signi == FALSE), 
-                          ggplot2::aes(x =  "R²", y = Rsquare_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.2, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(Rsquare_Signi == FALSE), 
+                   ggplot2::aes(x =  "R²", y = Rsquare_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.2, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(Mean_distLaw_Signi == TRUE), 
-                          ggplot2::aes(x = title_dist_law, y = Mean_distLaw_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.8, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(distance_specific_TADs_Signi == TRUE), 
+                   ggplot2::aes(x = title_dist_speTADs, y = distance_specific_TADs_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.8, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(Mean_distLaw_Signi == FALSE), 
-                          ggplot2::aes(x = title_dist_law, y = Mean_distLaw_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.2, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(distance_specific_TADs_Signi == FALSE), 
+                   ggplot2::aes(x = title_dist_speTADs, y = distance_specific_TADs_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.2, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(CV_distLaw_Signi == TRUE), 
-                          ggplot2::aes(x = paste0("CV ", title_dist_law), y = CV_distLaw_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.8, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(CV_distance_specific_TADs_Signi == TRUE), 
+                   ggplot2::aes(x = paste0("CV ", title_dist_speTADs), y = CV_distance_specific_TADs_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.8, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(CV_distLaw_Signi == FALSE), 
-                          ggplot2::aes(x = paste0("CV ", title_dist_law), y = CV_distLaw_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.2, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(CV_distance_specific_TADs_Signi == FALSE), 
+                   ggplot2::aes(x = paste0("CV ", title_dist_speTADs), y = CV_distance_specific_TADs_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.2, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(RMSE_Signi == TRUE), 
-                          ggplot2::aes(x =  "RMSE", y = RMSE_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.8, size = 6, color = "black", shape = 21)+
+                   dplyr::filter(distance_predicted_TADs_Signi == TRUE), 
+                   ggplot2::aes(x =  "Distance from predicted TADs", y = distance_predicted_TADs_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.8, size = 6, color = "black", shape = 21)+
       ggplot2::geom_point(data = SKRparam %>% 
-                            dplyr::filter(RMSE_Signi == FALSE), 
-                          ggplot2::aes(x =  "RMSE", y = RMSE_SES, fill = !!sym(statisticsFactorName)), 
-                          alpha = 0.2, size = 6, color = "black", shape = 21)+
-      ggplot2::scale_x_discrete(limits = c("Slope", "Intercept", "R²", "RMSE", title_dist_law, paste0("CV ", title_dist_law)))+
+                   dplyr::filter(distance_predicted_TADs_Signi == FALSE), 
+                   ggplot2::aes(x =  "Distance from predicted TADs", y = distance_predicted_TADs_SES, fill = !!rlang::sym(statisticsFactorName)), 
+                 alpha = 0.2, size = 6, color = "black", shape = 21)+
+      ggplot2::scale_x_discrete(limits = c("Slope", "Intercept", "R²", "Distance from predicted TADs", title_dist_speTADs, paste0("CV ", title_dist_speTADs)))+
       ggplot2::scale_fill_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
       ggplot2::scale_color_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
       ggplot2::theme_bw()+
       ggplot2::labs(title = paste0("Parameters of the SKR"), y = "SES")+
       ggplot2::theme(legend.position = "bottom",
-                     plot.title = ggplot2::element_text(size = 16, face = "bold", hjust = 0.5),
-                     axis.text.y = ggplot2::element_text(size = 10),
-                     axis.title.y = ggplot2::element_text(size = 12, face = "bold"),
-                     axis.title.x = ggplot2::element_blank(),
-                     axis.text.x = ggplot2::element_text(size = 10, face = "bold")),
+            plot.title = ggplot2::element_text(size = 16, face = "bold", hjust = 0.5),
+            axis.text.y = ggplot2::element_text(size = 10),
+            axis.title.y = ggplot2::element_text(size = 12, face = "bold"),
+            axis.title.x = ggplot2::element_blank(),
+            axis.text.x = ggplot2::element_text(size = 10, face = "bold")),
     dpi = 600,
     width = 15,
     height = 5

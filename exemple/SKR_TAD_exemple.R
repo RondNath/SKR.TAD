@@ -31,7 +31,11 @@ DataAnalysisTAD(
   statPerObsDataFrameRDS = "./Output/SES_MomentsDataFrame.RDS",
   statPerRandDataFrameRDS = "./Output/SKRDataFrame.RDS",
   statSKRparam = "./Output/SES_SKRDataFrame.RDS",
-  significativityThreshold = c(0.05, 0.95)
+  significativityThreshold = c(0.05, 0.95),
+  slope_speTADs = 1,
+  intercept_speTADs = 1.86,
+  distance_metric = "RMSE",
+  lin_mod = "lm"
 )
 
 # III. PLOT SKR RESULTS ----
@@ -50,8 +54,8 @@ GraphSKR(
   statisticsFactorName = c("Treatment"),
   statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
   statisticsFactorNameCol = c("#1A85FF", "#D41159"),
-  slope_distance = 1,
-  intercept_distance = 1.86,
+  slope_speTADs = 1,
+  intercept_speTADs = 1.86,
   saveGraphSKR = "./Output/SKR.png"
 )
 
@@ -60,7 +64,7 @@ GraphparamSKR(
   statisticsFactorName = c("Treatment"),
   statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
   statisticsFactorNameCol = c("#1A85FF", "#D41159"),
-  slope_distance = 1,
-  intercept_distance = 1.86,
+  slope_speTADs = 1,
+  intercept_speTADs = 1.86,
   saveGraphparamSKR = "./Output/paramSKR.png"
 )
