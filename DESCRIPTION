@@ -7,7 +7,7 @@ Authors@R:
     person("Raphael", "Martin", "raphael.martin@inrae.fr", role = c("aut"), comment = c(ORCID = "0000-0001-8778-7915")),
     person("Lain", "Pavot", "lain.pavot@inrae.fr", role = c("aut")),
     person("Pierre", "Liancourt", "pierre.liancourt@gmail.com", role = c("aut"), comment = c(ORCID = "0000-0002-3109-8755")),
-    person("François", "Munoz", role = c("aut")),
+    person("François", "Munoz", "francois.munoz@univ-lyon1.fr", role = c("aut")),
     person("Nicolas", "Gross", "nicolas.gross@inrae.fr", role = c("aut"), comment = c(ORCID = "0000-0001-9730-3240")),
     person(given = "INRAe/UREP", role = c("cph")))
 Maintainer: Nathan Rondeau <nathan.rondeau.sea@gmail.com>
