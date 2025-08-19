@@ -25,6 +25,22 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: doFuture, foreach, mblm (>= 0.12), methods, stats
-Suggests: Cairo, covr, dplyr, devtools, future (>= 1.33), ggplot2 (>= 3.5), ggpubr (>= 0.6), knitr, Matrix (>= 1.6), pkgdown, rlang, rmarkdown, roxygen2, testthat (>= 3.0), tinytex
+Suggests: 
+    Cairo,
+    covr,
+    dplyr,
+    devtools,
+    future (>= 1.33),
+    ggplot2 (>= 3.5),
+    ggpubr (>= 0.6),
+    knitr,
+    Matrix (>= 1.6),
+    pkgdown,
+    rlang,
+    rmarkdown,
+    roxygen2,
+    testthat (>= 3.0),
+    tinytex,
+    tidyverse
 Depends: 
     R (>= 3.5.0)
