@@ -2,7 +2,7 @@ Package: SKR.TAD
 Title: Trait Abundance Distributions (TAD) analysis with the Skewness-Kurtosis relationship (SKR).
 Version: 0.0.0.9000
 Authors@R: 
-    person("Nathan", "Rondeau", "nathan.rondeau.sea@gmail.com", role = c("aut"), comment = c(ORCID = "0009-0001-1229-7900")),
+    person("Nathan", "Rondeau", "nathan.rondeau.sea@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0009-0001-1229-7900")),
     person("Yoann", "Le Bagousse-Pinguet", "yoann.pinguet@imbe.fr", role = c("aut"), comment = c(ORCID = "0000-0002-5615-5541")),
     person("Raphael", "Martin", "raphael.martin@inrae.fr", role = c("aut"), comment = c(ORCID = "0000-0001-8778-7915")),
     person("Lain", "Pavot", "lain.pavot@inrae.fr", role = c("aut", "cre")),
