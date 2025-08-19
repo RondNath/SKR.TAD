@@ -41,7 +41,7 @@ GraphSKR <- function(
                                          se = F, method = "lm", formula = y ~ x, linetype = 1, linewidth = 2, alpha = 0.1)+
                     ggpubr::stat_regline_equation(data = MOM %>%
                                             filter(Number == 0),
-                                          aes(skewness**2, y = kurtosis, label =  paste(after_stat(eq.label), after_stat(rr.label), sep = "~~~~"), col = !!rlang::sym(statisticsFactorName)),
+                                          ggplot2::aes(skewness**2, y = kurtosis, label =  paste(after_stat(eq.label), after_stat(rr.label), sep = "~~~~"), col = !!rlang::sym(statisticsFactorName)),
                                           alpha = 1, size = 8)+
                     ggplot2::scale_fill_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
                     ggplot2::scale_color_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
