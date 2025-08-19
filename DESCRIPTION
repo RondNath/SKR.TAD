@@ -11,7 +11,7 @@ Authors@R:
     person("Nicolas", "Gross", "nicolas.gross@inrae.fr", role = c("aut"), comment = c(ORCID = "0000-0001-9730-3240")),
     person(given = "INRAe/UREP", role = c("cph")))
 Author: Nathan Rondeau [aut, cre],
-Yoann LeBagoussePinguet [aut],
+    Yoann LeBagoussePinguet [aut],
 Raphael Martin [aut],
 Lain Pavot [aut],
 Pierre Laincourt [aut],
