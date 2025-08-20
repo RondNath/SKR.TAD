@@ -32,7 +32,7 @@ DataAnalysisTAD(
   statPerObsDataFrameRDS = "./Output/SES_MomentsDataFrame.RDS",
   statPerRandDataFrameRDS = "./Output/SKRDataFrame.RDS",
   statSKRparam = "./Output/SES_SKRDataFrame.RDS",
-  significativityThreshold = c(0.05, 0.95),
+  significanceThreshold = c(0.05, 0.95),
   slope_speTADs = 1,
   intercept_speTADs = 1.86,
   distance_metric = "RMSE",
