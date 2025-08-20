@@ -21,7 +21,7 @@ DataAnalysisTAD(
   regenerateWeightedMomentsDataFrame = FALSE,
   regenerateStatPerObsDataFrame = FALSE,
   regenerateStatPerRandDataFrame = FALSE,
-  significativityThreshold = c(0.05, 0.95),
+  significanceThreshold = c(0.05, 0.95),
   doParallel = TRUE,
   lin_mod = "lm",
   slope_speTADs = 1,
@@ -62,7 +62,7 @@ DataAnalysisTAD(
 
 \item{regenerateStatPerRandDataFrame}{boolean to specify if the statistics per random matrix dataframe is computed again}
 
-\item{significativityThreshold}{the significance threshold to consider that the observed value is in the randomized value}
+\item{significanceThreshold}{the significance threshold to consider that the observed value is in the randomized value}
 
 \item{doParallel}{Indicates if we use parallelism to construct the random matrix}
 
