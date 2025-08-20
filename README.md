@@ -5,7 +5,7 @@ Based on an analysis of the Skewness-Kurtosis Relationship (SKR), this framework
 Installing the package
 ---------------------------------
 The version 1.0.0 is available on CRAN, https://cran.r-project.org/web/packages/TAD/index.html
-install.packages("ecolottery")
+install.packages("TAD")
 
 The development version on Github can be installed using the devtools package:
 devtools::install_github("RondNath/SKR.TAD")
