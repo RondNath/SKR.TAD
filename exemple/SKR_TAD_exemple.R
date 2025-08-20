@@ -15,7 +15,7 @@ trait <- r4urep::loadTableFile(path = "./Input/trait.csv",
                                sep = ";",
                                dec= ".")
 
-DataAnalysisTAD(
+SKR.TAD::DataAnalysisTAD(
   weights = abundance[,5:102],
   weightsFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
   dataToTreat = log(trait[["SLA"]]),
@@ -41,7 +41,7 @@ DataAnalysisTAD(
 
 # III. PLOT SKR RESULTS ----
 
-GraphMoments(
+SKR.TAD::GraphMoments(
   MOM = readRDS("./Output/MomentsDataFrame.RDS"),
   SESMOM = readRDS("./Output/SES_MomentsDataFrame.RDS"),
   statisticsFactorName = c("Treatment"),
@@ -50,7 +50,7 @@ GraphMoments(
   saveGraphMoments = "./Output/Moments.png"
 )
 
-GraphSKR(
+SKR.TAD::GraphSKR(
   MOM = readRDS("./Output/MomentsDataFrame.RDS"),
   statisticsFactorName = c("Treatment"),
   statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
@@ -60,7 +60,7 @@ GraphSKR(
   saveGraphSKR = "./Output/SKR.png"
 )
 
-GraphparamSKR(
+SKR.TAD::GraphparamSKR(
   SKRparam = readRDS("./Output/SES_SKRDataFrame.RDS"),
   statisticsFactorName = c("Treatment"),
   statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
