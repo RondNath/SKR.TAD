@@ -2,12 +2,14 @@
 
 Based on an analysis of the Skewness-Kurtosis Relationship (SKR), this framework promotes the study of the shapes of the Trait Abundance Distributions (TADs) to better understand community assembly processes, and predict community dynamics under environmental changes.
 
-<!-- badges: start -->
-[![Pipeline mainbranch](https://forgemia.inra.fr/urep/data_processing/tad/badges/main/pipeline.svg?key_text=Pipeline+main+branch&key_width=130)](https://forgemia.inra.fr/urep/data_processing/tad/pipelines/main/latest)
-[![LatestRelease](https://forgemia.inra.fr/urep/data_processing/tad/-/badges/release.svg)](https://forgemia.inra.fr/urep/data_processing/tad/-/releases)
-[![Coverage](https://forgemia.inra.fr/urep/data_processing/tad/badges/main/coverage.svg?key_text=Coverage)](https://urep.pages.mia.inra.fr/data_processing/tad/coverage/report.html)
-[![Usermanual](https://urep.pages.mia.inra.fr/data_processing/tad/manual.svg)](https://urep.pages.mia.inra.fr/dev_utils/r_utils/r4urep/index.html)
-<!-- badges: end -->
+Installing the package
+---------------------------------
+The version 1.0.0 is available on CRAN, https://cran.r-project.org/web/packages/TAD/index.html
+install.packages("ecolottery")
+
+The development version on Github can be installed using the devtools package:
+devtools::install_github("RondNath/SKR.TAD")
+
 
 Step 1 - Function: Randomize the abundances
 ---------------------------------
