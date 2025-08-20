@@ -19,11 +19,11 @@ GraphMoments <- function(MOM,
   ggplot2::ggsave(saveGraphMoments,
                   ggpubr::ggarrange(
                     ggplot2::ggplot()+
-                      ggplot2::geom_boxplot(data = MOM %>%
+                      ggplot2::geom_boxplot(data = MOM |>
                                               dplyr::filter(Number > 0),
                                             ggplot2::aes(x = "Mean", y = mean),
                                             col = "black", fill = "lightgrey", alpha = 0.4)+
-                      ggplot2::geom_point(data = MOM %>%
+                      ggplot2::geom_point(data = MOM |>
                                             dplyr::filter(Number == 0),
                                           ggplot2::aes(x = "Mean", y = mean, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.4, position = "jitter")+
@@ -40,11 +40,11 @@ GraphMoments <- function(MOM,
                                      legend.text = ggplot2::element_text(size = 30),
                                      legend.key.size = ggplot2::unit(1.5, 'cm')),
                     ggplot2::ggplot()+
-                      ggplot2::geom_boxplot(data = MOM %>%
+                      ggplot2::geom_boxplot(data = MOM |>
                                               dplyr::filter(Number > 0),
                                             ggplot2::aes(x = "Variance", y = variance),
                                             col = "black", fill = "lightgrey", alpha = 0.4)+
-                      ggplot2::geom_point(data = MOM %>%
+                      ggplot2::geom_point(data = MOM |>
                                             dplyr::filter(Number == 0),
                                           ggplot2::aes(x = "Variance", y = variance, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.4, position = "jitter")+
@@ -61,11 +61,11 @@ GraphMoments <- function(MOM,
                                      legend.text = ggplot2::element_text(size = 30),
                                      legend.key.size = ggplot2::unit(1.5, 'cm')),
                     ggplot2::ggplot()+
-                      ggplot2::geom_boxplot(data = MOM %>%
+                      ggplot2::geom_boxplot(data = MOM |>
                                               dplyr::filter(Number > 0),
                                             ggplot2::aes(x = "Skewness", y = skewness),
                                             col = "black", fill = "lightgrey", alpha = 0.4)+
-                      ggplot2::geom_point(data = MOM %>%
+                      ggplot2::geom_point(data = MOM |>
                                             dplyr::filter(Number == 0),
                                           ggplot2::aes(x = "Skewness", y = skewness, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.4, position = "jitter")+
@@ -82,11 +82,11 @@ GraphMoments <- function(MOM,
                                      legend.text = ggplot2::element_text(size = 30),
                                      legend.key.size = ggplot2::unit(1.5, 'cm')),
                     ggplot2::ggplot()+
-                      ggplot2::geom_boxplot(data = MOM %>%
+                      ggplot2::geom_boxplot(data = MOM |>
                                               dplyr::filter(Number > 0),
                                             ggplot2::aes(x = "Kurtosis", y = kurtosis),
                                             col = "black", fill = "lightgrey", alpha = 0.4)+
-                      ggplot2::geom_point(data = MOM %>%
+                      ggplot2::geom_point(data = MOM |>
                                             dplyr::filter(Number == 0),
                                           ggplot2::aes(x = "Kurtosis", y = kurtosis, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.4, position = "jitter")+
@@ -104,11 +104,11 @@ GraphMoments <- function(MOM,
                                      legend.key.size = ggplot2::unit(1.5, 'cm')),
                     ggplot2::ggplot()+
                       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
-                      ggplot2::geom_point(data = SESMOM %>%
+                      ggplot2::geom_point(data = SESMOM |>
                                             dplyr::filter(significanceMean == "TRUE"),
                                           ggplot2::aes(x = "Mean", y = standardizedObservedMean, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.8, position = "jitter")+
-                      ggplot2::geom_point(data = SESMOM %>%
+                      ggplot2::geom_point(data = SESMOM |>
                                             dplyr::filter(significanceMean == "FALSE"),
                                           ggplot2::aes(x = "Mean", y = standardizedObservedMean, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.2, position = "jitter")+
@@ -126,11 +126,11 @@ GraphMoments <- function(MOM,
                                      legend.key.size = ggplot2::unit(1.5, 'cm')),
                     ggplot2::ggplot()+
                       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
-                      ggplot2::geom_point(data = SESMOM %>%
+                      ggplot2::geom_point(data = SESMOM |>
                                             dplyr::filter(significanceVariance == "TRUE"),
                                           ggplot2::aes(x = "Variance", y = standardizedObservedVariance, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.8, position = "jitter")+
-                      ggplot2::geom_point(data = SESMOM %>%
+                      ggplot2::geom_point(data = SESMOM |>
                                             dplyr::filter(significanceVariance == "FALSE"),
                                           ggplot2::aes(x = "Variance", y = standardizedObservedVariance, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.2, position = "jitter")+
@@ -148,11 +148,11 @@ GraphMoments <- function(MOM,
                                      legend.key.size = ggplot2::unit(1.5, 'cm')),
                     ggplot2::ggplot()+
                       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
-                      ggplot2::geom_point(data = SESMOM %>%
+                      ggplot2::geom_point(data = SESMOM |>
                                             dplyr::filter(significanceSkewness == "TRUE"),
                                           ggplot2::aes(x = "Skewness", y = standardizedObservedSkewness, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.8, position = "jitter")+
-                      ggplot2::geom_point(data = SESMOM %>%
+                      ggplot2::geom_point(data = SESMOM |>
                                             dplyr::filter(significanceSkewness == "FALSE"),
                                           ggplot2::aes(x = "Skewness", y = standardizedObservedSkewness, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.2, position = "jitter")+
@@ -170,11 +170,11 @@ GraphMoments <- function(MOM,
                                      legend.key.size = ggplot2::unit(1.5, 'cm')),
                     ggplot2::ggplot()+
                       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
-                      ggplot2::geom_point(data = SESMOM %>%
+                      ggplot2::geom_point(data = SESMOM |>
                                             dplyr::filter(significanceKurtosis == "TRUE"),
                                           ggplot2::aes(x = "Kurtosis", y = standardizedObservedKurtosis, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.8, position = "jitter")+
-                      ggplot2::geom_point(data = SESMOM %>%
+                      ggplot2::geom_point(data = SESMOM |>
                                             dplyr::filter(significanceKurtosis == "FALSE"),
                                           ggplot2::aes(x = "Kurtosis", y = standardizedObservedKurtosis, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                           shape = 21, size = 4, alpha = 0.2, position = "jitter")+

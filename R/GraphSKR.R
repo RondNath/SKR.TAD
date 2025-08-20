@@ -22,24 +22,24 @@ GraphSKR <- function(
 ) {
   ggplot2::ggsave(saveGraphSKR,
                   ggplot2::ggplot() +
-                    ggplot2::geom_point(data = MOM %>%
+                    ggplot2::geom_point(data = MOM |>
                                           dplyr::filter(Number > 0),
                                         ggplot2::aes(x = skewness**2, y = kurtosis),
                                         shape = 21, size = 2, alpha = 0.4, col = "#D3D3D3", fill = "#D3D3D3")+
-                    ggplot2::geom_smooth(data = MOM %>%
+                    ggplot2::geom_smooth(data = MOM |>
                                            dplyr::filter(Number > 0),
                                          ggplot2::aes(x = skewness**2, y = kurtosis, group = Number),
                                          col = "#D3D3D3", fill = "#D3D3D3", se = F, method = "lm", formula = y ~ x, linetype = 1, linewidth = 0.5, alpha = 0.1)+
                     ggplot2::geom_abline(intercept = intercept_speTADs, slope = slope_speTADs, linetype = "dashed", linewidth = 2) +
-                    ggplot2::geom_point(data = MOM %>%
+                    ggplot2::geom_point(data = MOM |>
                                           dplyr::filter(Number == 0),
                                         ggplot2::aes(x = skewness**2, y = kurtosis, fill = !!rlang::sym(statisticsFactorName)),
                                         shape = 21, size = 6, alpha = 0.4)+
-                    ggplot2::geom_smooth(data = MOM %>%
+                    ggplot2::geom_smooth(data = MOM |>
                                            dplyr::filter(Number == 0),
                                          ggplot2::aes(x = skewness**2, y = kurtosis, col = !!rlang::sym(statisticsFactorName), fill = !!rlang::sym(statisticsFactorName)),
                                          se = F, method = "lm", formula = y ~ x, linetype = 1, linewidth = 2, alpha = 0.1)+
-                    ggpubr::stat_regline_equation(data = MOM %>%
+                    ggpubr::stat_regline_equation(data = MOM |>
                                             filter(Number == 0),
                                           ggplot2::aes(skewness**2, y = kurtosis, label =  paste(after_stat(eq.label), after_stat(rr.label), sep = "~~~~"), col = !!rlang::sym(statisticsFactorName)),
                                           alpha = 1, size = 8)+
