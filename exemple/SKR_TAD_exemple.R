@@ -5,20 +5,13 @@ library(SKR.TAD)
 
 # II. LAUNCH SKR ANALYSIS ----
 
-# Load abundance Data
-abundance <- r4urep::loadTableFile(path = "./Input/abundance.csv",
-                            colFactor = c("Plot", "Treatment", "Year", "Bloc"),
-                            sep = ";",
-                            dec = ".")
-# Load trait Data
-trait <- r4urep::loadTableFile(path = "./Input/trait.csv",
-                               sep = ";",
-                               dec= ".")
+# Set working directory to source .R file location used to launch analysis with SKR.TAD package
+# "Session" > "Set Working Directory" > "To Source File Location"
 
 SKR.TAD::DataAnalysisTAD(
-  weights = abundance[,5:102],
-  weightsFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
-  dataToTreat = log(trait[["SLA"]]),
+  weights = SKR.TAD::abundance[,5:102],
+  weightsFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
+  dataToTreat = log(SKR.TAD::trait[["SLA"]]),
   aggregationFactorName = c("Year", "Bloc"),
   statisticsFactorName = c("Treatment"),
   regenerateAbundanceDataFrame = T,
@@ -40,7 +33,6 @@ SKR.TAD::DataAnalysisTAD(
 )
 
 # III. PLOT SKR RESULTS ----
-
 SKR.TAD::GraphMoments(
   MOM = readRDS("./Output/MomentsDataFrame.RDS"),
   SESMOM = readRDS("./Output/SES_MomentsDataFrame.RDS"),
