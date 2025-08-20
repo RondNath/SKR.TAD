@@ -23,7 +23,7 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' @param regenerateWeightedMomentsDataFrame boolean to specify if the weighted moments dataframe is computed again
 #' @param regenerateStatPerObsDataFrame boolean to specify if the statistics per observation dataframe is computed again
 #' @param regenerateStatPerRandDataFrame boolean to specify if the statistics per random matrix dataframe is computed again
-#' @param significativityThreshold the significance threshold to consider that the observed value is in the randomized value
+#' @param significanceThreshold the significance threshold to consider that the observed value is in the randomized value
 #' @param doParallel Indicates if we use parallelism to construct the random matrix
 #' @param slope_speTADs slope of a specific SKR used as a baseline (default: slope_speTADs = 1; skew-uniform slope)
 #' @param intercept_speTADs intercept of a specific SKR used as a baseline (default: intercept_speTADs = 1.86; skew-uniform intercept)
@@ -48,7 +48,7 @@ DataAnalysisTAD <- function(
     regenerateWeightedMomentsDataFrame = FALSE,
     regenerateStatPerObsDataFrame = FALSE,
     regenerateStatPerRandDataFrame = FALSE,
-    significativityThreshold = c(0.05, 0.95),
+    significanceThreshold = c(0.05, 0.95),
     doParallel = TRUE,
     lin_mod = "lm",
     slope_speTADs = 1,
@@ -150,25 +150,25 @@ DataAnalysisTAD <- function(
 
     for (i in seq_len(nrow(statisticsPerObservation))){
       statisticsPerObservation[i, (ncol(weightsFactor) + 1):(ncol(weightsFactor) + 4)] <-
-        nullModelDistributionStatistics(
+        r4urep::nullModelDistributionStatistics(
           observedValue = weightedMoments$mean[i],
           randomValues = weightedMoments$mean[(1:randomizationNumber) * nrow(statisticsPerObservation) + i],
-          significanceThreshold = significativityThreshold)
+          significanceThreshold = significanceThreshold)
       statisticsPerObservation[i, (ncol(weightsFactor) + 5):(ncol(weightsFactor) + 8)] <-
-        nullModelDistributionStatistics(
+        r4urep::nullModelDistributionStatistics(
           observedValue = weightedMoments$variance[i],
           randomValues = weightedMoments$variance[(1:randomizationNumber) * nrow(statisticsPerObservation) + i],
-          significanceThreshold = significativityThreshold)
+          significanceThreshold = significanceThreshold)
       statisticsPerObservation[i, (ncol(weightsFactor) + 9):(ncol(weightsFactor) + 12)] <-
-        nullModelDistributionStatistics(
+        r4urep::nullModelDistributionStatistics(
           observedValue = weightedMoments$skewness[i],
           randomValues = weightedMoments$skewness[(1:randomizationNumber) * nrow(statisticsPerObservation) + i],
-          significanceThreshold = significativityThreshold)
+          significanceThreshold = significanceThreshold)
       statisticsPerObservation[i, (ncol(weightsFactor) + 13):(ncol(weightsFactor) + 16)] <-
-        nullModelDistributionStatistics(
+        r4urep::nullModelDistributionStatistics(
           observedValue = weightedMoments$kurtosis[i],
           randomValues = weightedMoments$kurtosis[(1:randomizationNumber) * nrow(statisticsPerObservation) + i],
-          significanceThreshold = significativityThreshold)
+          significanceThreshold = significanceThreshold)
     }
     commonColName <- c("standardizedObserved",
                        "standardizedMinQuantile",
@@ -262,54 +262,54 @@ DataAnalysisTAD <- function(
   for (i in unique(SKRparam[[statisticsFactorName]])){
     SES_SKR <- rbind(SES_SKR,
                      data.frame(
-                       Slope_SES = nullModelDistributionStatistics(
+                       Slope_SES = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$Slope,
                          randomValues = SKRparam[SKRparam$Number > 0,]$Slope,
-                         significanceThreshold = significativityThreshold)[[1]][1],
-                       Slope_Signi = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[1]][1],
+                       Slope_Signi = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$Slope,
                          randomValues = SKRparam[SKRparam$Number > 0,]$Slope,
-                         significanceThreshold = significativityThreshold)[[4]][1],
-                       Intercept_SES = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[4]][1],
+                       Intercept_SES = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$Intercept,
                          randomValues = SKRparam[SKRparam$Number > 0,]$Intercept,
-                         significanceThreshold = significativityThreshold)[[1]][1],
-                       Intercept_Signi = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[1]][1],
+                       Intercept_Signi = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$Intercept,
                          randomValues = SKRparam[SKRparam$Number > 0,]$Intercept,
-                         significanceThreshold = significativityThreshold)[[4]][1],
-                       Rsquare_SES = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[4]][1],
+                       Rsquare_SES = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$Rsquare,
                          randomValues = SKRparam[SKRparam$Number > 0,]$Rsquare,
-                         significanceThreshold = significativityThreshold)[[1]][1],
-                       Rsquare_Signi = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[1]][1],
+                       Rsquare_Signi = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$Rsquare,
                          randomValues = SKRparam[SKRparam$Number > 0,]$Rsquare,
-                         significanceThreshold = significativityThreshold)[[4]][1],
-                       distance_predicted_TADs_SES = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[4]][1],
+                       distance_predicted_TADs_SES = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$distance_predicted_TADs,
                          randomValues = SKRparam[SKRparam$Number > 0,]$distance_predicted_TADs,
-                         significanceThreshold = significativityThreshold)[[1]][1],
-                       distance_predicted_TADs_Signi = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[1]][1],
+                       distance_predicted_TADs_Signi = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$distance_predicted_TADs,
                          randomValues = SKRparam[SKRparam$Number > 0,]$distance_predicted_TADs,
-                         significanceThreshold = significativityThreshold)[[4]][1],
-                       distance_specific_TADs_SES = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[4]][1],
+                       distance_specific_TADs_SES = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$distance_specific_TADs,
                          randomValues = SKRparam[SKRparam$Number > 0,]$distance_specific_TADs,
-                         significanceThreshold = significativityThreshold)[[1]][1],
-                       distance_specific_TADs_Signi = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[1]][1],
+                       distance_specific_TADs_Signi = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$distance_specific_TADs,
                          randomValues = SKRparam[SKRparam$Number > 0,]$distance_specific_TADs,
-                         significanceThreshold = significativityThreshold)[[4]][1],
-                       CV_distance_specific_TADs_SES = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[4]][1],
+                       CV_distance_specific_TADs_SES = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$CV_distance_specific_TADs,
                          randomValues = SKRparam[SKRparam$Number > 0,]$CV_distance_specific_TADs,
-                         significanceThreshold = significativityThreshold)[[1]][1],
-                       CV_distance_specific_TADs_Signi = nullModelDistributionStatistics(
+                         significanceThreshold = significanceThreshold)[[1]][1],
+                       CV_distance_specific_TADs_Signi = r4urep::nullModelDistributionStatistics(
                          observedValue = SKRparam[SKRparam[[statisticsFactorName]] == i & SKRparam$Number == 0,]$CV_distance_specific_TADs,
                          randomValues = SKRparam[SKRparam$Number > 0,]$CV_distance_specific_TADs,
-                         significanceThreshold = significativityThreshold)[[4]][1],
+                         significanceThreshold = significanceThreshold)[[4]][1],
                        statisticsFactorName = i))
   }
   names(SES_SKR)[names(SES_SKR) == "statisticsFactorName"] <- statisticsFactorName
