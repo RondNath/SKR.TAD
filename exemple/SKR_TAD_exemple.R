@@ -1,6 +1,7 @@
 # I. PACKAGES ----
 library(devtools)
-devtools::install_github("RondNath/SKR.TAD")
+devtools::install_github("RondNath/SKR.TAD", force = T)
+library(SKR.TAD)
 
 # II. LAUNCH SKR ANALYSIS ----
 
