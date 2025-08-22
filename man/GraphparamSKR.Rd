@@ -29,6 +29,24 @@ GraphparamSKR(
 
 \item{data}{SES of SKR parameters data frame (SES and Significance)}
 }
+\value{
+Plot of the SES SKR parameters values and significance
+}
 \description{
-Graph: parameters of the SKR
+Generate and save plot with the SES SKR parameters values (observations compared to randomizations)
+}
+\examples{
+
+Example of how to use the function for grassland plant communities
+under contrasting management practices.
+
+SKR.TAD::GraphparamSKR(
+SKRparam = readRDS("./SES_SKRDataFrame.RDS"),
+statisticsFactorName = c("Treatment"),
+statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
+statisticsFactorNameCol = c("#1A85FF", "#D41159"),
+slope_speTADs = 1,
+intercept_speTADs = 1.86,
+saveGraphparamSKR = "./paramSKR.png"
+)
 }

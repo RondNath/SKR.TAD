@@ -26,6 +26,23 @@ GraphMoments(
 
 \item{saveGraphMoments}{The path to save the graph}
 }
+\value{
+Plot in two panels up) the moments, bottom) the SES moments values
+}
 \description{
-Graph: Distribution moments
+Generate and save plot with moments (mean, variance, skewness & kurtosis) and SES moments values (observations compared to randomizations)
+}
+\examples{
+
+Example of how to use the function for grassland plant communities
+under contrasting management practices.
+
+SKR.TAD::GraphMoments(
+MOM = readRDS("./MomentsDataFrame.RDS"),
+SESMOM = readRDS("./SES_MomentsDataFrame.RDS"),
+statisticsFactorName = c("Treatment"),
+statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
+statisticsFactorNameCol = c("#1A85FF", "#D41159"),
+saveGraphMoments = "./Moments.png"
+)
 }

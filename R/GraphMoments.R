@@ -2,13 +2,28 @@
 ### a. Distribution moments representation (mean, variance, skewness and kurtosis) ----
 
 #' @title Graph: Distribution moments
+#' @description Generate and save plot with moments (mean, variance, skewness & kurtosis) and SES moments values (observations compared to randomizations)
 #' @param MOM Moments data frame (mean, variance, skewness, kurtosis)
 #' @param SESMOM SES of the Moments data frame and significance compared to null model
 #' @param statisticsFactorName column of data use for colors discrimination
 #' @param statisticsFactorNameBreaks vector of factor levels of the statisticsFactorName, same dimension than statisticsFactorNameCol
 #' @param statisticsFactorNameCol vector of colors, same dimension than statisticsFactorNameBreaks
 #' @param saveGraphMoments The path to save the graph
+#' @returns Plot in two panels up) the moments, bottom) the SES moments values
 #' @export
+#' @examples
+#'
+#' Example of how to use the function for grassland plant communities
+#' under contrasting management practices.
+#'
+#' SKR.TAD::GraphMoments(
+#' MOM = readRDS("./MomentsDataFrame.RDS"),
+#' SESMOM = readRDS("./SES_MomentsDataFrame.RDS"),
+#' statisticsFactorName = c("Treatment"),
+#' statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
+#' statisticsFactorNameCol = c("#1A85FF", "#D41159"),
+#' saveGraphMoments = "./Moments.png"
+#' )
 
 GraphMoments <- function(MOM,
                          SESMOM,

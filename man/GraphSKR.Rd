@@ -29,6 +29,24 @@ GraphSKR(
 
 \item{saveGraphSKR}{The path to save the graph}
 }
+\value{
+Plot of the SKR and parameters for observed and randomized communities
+}
 \description{
-Graph: SKR
+Generate and save plot with the Skewness-Kurtosis Relationship (SKR: Kurtosis ~ slope x Skewness² + intercept)
+}
+\examples{
+
+Example of how to use the function for grassland plant communities
+under contrasting management practices.
+
+SKR.TAD::GraphSKR(
+MOM = readRDS("./MomentsDataFrame.RDS"),
+statisticsFactorName = c("Treatment"),
+statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
+statisticsFactorNameCol = c("#1A85FF", "#D41159"),
+slope_speTADs = 1,
+intercept_speTADs = 1.86,
+saveGraphSKR = "./SKR.png"
+)
 }

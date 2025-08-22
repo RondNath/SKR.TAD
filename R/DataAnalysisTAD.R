@@ -33,11 +33,13 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' moments (mean, variance, skewness & kurtosis) for observed and randomized communities,
 #' Standardized Effect Size (SES) values of the moments for observed compared to randomized communities and significance,
 #' SKR parameters for observed and randomized communities
-#' SES of the SKR parameters (slope, intercept, Rsquare, distance from predicted TADs, distance from specific TADs & CV of the distance from specific TADs) for observed compared to randomized communities and significance.
+#' SES of the SKR parameters (slope, intercept, Rsquare, distance from predicted TADs, distance from specific TADs & CV of the distance from specific TADs).
 #' @export
 #' @examples
 #'
-#' Example of function used, with "abundance" dataframe of grassland plant communities observed under different management practices over time, and "trait" dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020)
+#' Example of how to use the function, with "abundance" dataframe of grassland
+#' plant communities observed under contrasting management practices and,
+#' "trait" dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020).
 #'
 #' SKR.TAD::DataAnalysisTAD(
 #' weights = SKR.TAD::abundance[,5:102],
@@ -51,11 +53,11 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' regenerateStatPerRandDataFrame = T,
 #' randomizationNumber = 1000,
 #' seed = 666,
-#' abundanceDataFrameRDS = "./Output/abundanceDataFrame.RDS",
-#' weightedMomentsDataFrameRDS = "./Output/MomentsDataFrame.RDS",
-#' statPerObsDataFrameRDS = "./Output/SES_MomentsDataFrame.RDS",
-#' statPerRandDataFrameRDS = "./Output/SKRDataFrame.RDS",
-#' statSKRparam = "./Output/SES_SKRDataFrame.RDS",
+#' abundanceDataFrameRDS = "./abundanceDataFrame.RDS",
+#' weightedMomentsDataFrameRDS = "./MomentsDataFrame.RDS",
+#' statPerObsDataFrameRDS = "./SES_MomentsDataFrame.RDS",
+#' statPerRandDataFrameRDS = "./SKRDataFrame.RDS",
+#' statSKRparam = "./SES_SKRDataFrame.RDS",
 #' significanceThreshold = c(0.05, 0.95),
 #' slope_speTADs = 1,
 #' intercept_speTADs = 1.86,

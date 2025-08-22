@@ -2,6 +2,7 @@
 ### c. Parameters of the SKR ----
 
 #' @title Graph: parameters of the SKR
+#' @description Generate and save plot with the SES SKR parameters values (observations compared to randomizations)
 #' @param data SES of SKR parameters data frame (SES and Significance)
 #' @param statisticsFactorName column of data use for colors discrimination
 #' @param statisticsFactorNameBreaks vector of factor levels of the statisticsFactorName, same dimension than statisticsFactorNameCol
@@ -9,7 +10,22 @@
 #' @param saveGraphparamSKR The path to save the graph
 #' @param slope_speTADs slope of a specific SKR used as a baseline (default: slope_speTADs = 1; skew-uniform slope)
 #' @param intercept_speTADs intercept of a specific SKR used as a baseline (default: intercept_speTADs = 1.86; skew-uniform intercept)
+#' @returns Plot of the SES SKR parameters values and significance
 #' @export
+#' @examples
+#'
+#' Example of how to use the function for grassland plant communities
+#' under contrasting management practices.
+#'
+#' SKR.TAD::GraphparamSKR(
+#' SKRparam = readRDS("./SES_SKRDataFrame.RDS"),
+#' statisticsFactorName = c("Treatment"),
+#' statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
+#' statisticsFactorNameCol = c("#1A85FF", "#D41159"),
+#' slope_speTADs = 1,
+#' intercept_speTADs = 1.86,
+#' saveGraphparamSKR = "./paramSKR.png"
+#' )
 
 GraphparamSKR <- function(SKRparam,
                           statisticsFactorName,

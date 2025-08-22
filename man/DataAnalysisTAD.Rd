@@ -74,7 +74,44 @@ DataAnalysisTAD(
 
 \item{distance_metric}{Indicates the method to compute distance-based regression parameters: choose "RMSE" (for Root Mean Square Error, default) or "MAE" (for Mean Absolute Error)}
 }
+\value{
+RDS files with:
+abundance for observed and randomized communities,
+moments (mean, variance, skewness & kurtosis) for observed and randomized communities,
+Standardized Effect Size (SES) values of the moments for observed compared to randomized communities and significance,
+SKR parameters for observed and randomized communities
+SES of the SKR parameters (slope, intercept, Rsquare, distance from predicted TADs, distance from specific TADs & CV of the distance from specific TADs).
+}
 \description{
 Launch the SKR analysis of the TADs, and generate output dataset
 }
-\concept{tad}
+\examples{
+
+Example of how to use the function, with "abundance" dataframe of grassland
+plant communities observed under contrasting management practices and,
+"trait" dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020).
+
+SKR.TAD::DataAnalysisTAD(
+weights = SKR.TAD::abundance[,5:102],
+weightsFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
+dataToTreat = log(SKR.TAD::trait[["SLA"]]),
+aggregationFactorName = c("Year", "Bloc"),
+statisticsFactorName = c("Treatment"),
+regenerateAbundanceDataFrame = T,
+regenerateWeightedMomentsDataFrame = T,
+regenerateStatPerObsDataFrame = T,
+regenerateStatPerRandDataFrame = T,
+randomizationNumber = 1000,
+seed = 666,
+abundanceDataFrameRDS = "./abundanceDataFrame.RDS",
+weightedMomentsDataFrameRDS = "./MomentsDataFrame.RDS",
+statPerObsDataFrameRDS = "./SES_MomentsDataFrame.RDS",
+statPerRandDataFrameRDS = "./SKRDataFrame.RDS",
+statSKRparam = "./SES_SKRDataFrame.RDS",
+significanceThreshold = c(0.05, 0.95),
+slope_speTADs = 1,
+intercept_speTADs = 1.86,
+distance_metric = "RMSE",
+lin_mod = "lm"
+)
+}

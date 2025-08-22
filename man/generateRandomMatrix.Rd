@@ -26,7 +26,20 @@ generateRandomMatrix(
 
 \item{doParallel}{Indicates if we use parallelism to construct the random matrix}
 }
+\value{
+RDS file with the abundance of observed and randomized communities
+}
 \description{
 Generate and save random matrix
 }
-\concept{tad}
+\examples{
+
+Example of how to use the function, with "abundance" dataframe
+of grassland plant communities observed under different management practices over time.
+
+generateRandomMatrix(weights = SKR.TAD::abundance[,5:102],
+aggregationFactor =  c("Year", "Bloc"),
+seed = 666,
+weightsDataframeRDS = "./abundanceDataFrame.RDS",
+doParallel = TRUE)
+}

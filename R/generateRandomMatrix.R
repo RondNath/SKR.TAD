@@ -2,7 +2,6 @@
 ### a. Generate random matrix ----
 #' @title Generate random matrix
 #' @description Generate and save random matrix
-#' @concept tad
 #' @param weights the dataframe of weights, one row correspond to a series of observation
 #' @param aggregationFactor the dataframe of factor to take into account for the randomization
 #' @param randomizationNumber the number of random abundance matrix to generate
@@ -10,7 +9,18 @@
 #' @param weightsDataframeRDS the path and name of the file to save generated matrix
 #' @param doParallel Indicates if we use parallelism to construct the random matrix
 #' @importFrom foreach %dopar%
+#' @returns RDS file with the abundance of observed and randomized communities
 #' @export
+#' @examples
+#'
+#' Example of how to use the function, with "abundance" dataframe
+#' of grassland plant communities observed under different management practices over time.
+#'
+#' generateRandomMatrix(weights = SKR.TAD::abundance[,5:102],
+#' aggregationFactor =  c("Year", "Bloc"),
+#' seed = 666,
+#' weightsDataframeRDS = "./abundanceDataFrame.RDS",
+#' doParallel = TRUE)
 
 generateRandomMatrix <- function(weights,
                                  aggregationFactor = NULL,
