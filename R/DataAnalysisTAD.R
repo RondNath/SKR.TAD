@@ -6,7 +6,6 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 
 #' @title Launch the analysis of the TADs with the SKR framework
 #' @description Launch the SKR analysis of the TADs, and generate output dataset
-#' @concept tad
 #' @param weights the dataframe of weights, one row correspond to a series of observation
 #' @param weightsFactor the dataframe which contains the different factor linked to the weights
 #' @param dataToTreat a vector of the data linked to the different factor
@@ -29,7 +28,40 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' @param intercept_speTADs intercept of a specific SKR used as a baseline (default: intercept_speTADs = 1.86; skew-uniform intercept)
 #' @param lin_mod Indicates the type of linear model to use for (SKR): choose "lm" or "mblm"
 #' @param distance_metric Indicates the method to compute distance-based regression parameters: choose "RMSE" (for Root Mean Square Error, default) or "MAE" (for Mean Absolute Error)
+#' @returns RDS files with:
+#' abundance for observed and randomized communities,
+#' moments (mean, variance, skewness & kurtosis) for observed and randomized communities,
+#' Standardized Effect Size (SES) values of the moments for observed compared to randomized communities and significance,
+#' SKR parameters for observed and randomized communities
+#' SES of the SKR parameters (slope, intercept, Rsquare, distance from predicted TADs, distance from specific TADs & CV of the distance from specific TADs) for observed compared to randomized communities and significance.
 #' @export
+#' @examples
+#'
+#' Example of function used, with "abundance" dataframe of grassland plant communities observed under different management practices over time, and "trait" dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020)
+#'
+#' SKR.TAD::DataAnalysisTAD(
+#' weights = SKR.TAD::abundance[,5:102],
+#' weightsFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
+#' dataToTreat = log(SKR.TAD::trait[["SLA"]]),
+#' aggregationFactorName = c("Year", "Bloc"),
+#' statisticsFactorName = c("Treatment"),
+#' regenerateAbundanceDataFrame = T,
+#' regenerateWeightedMomentsDataFrame = T,
+#' regenerateStatPerObsDataFrame = T,
+#' regenerateStatPerRandDataFrame = T,
+#' randomizationNumber = 1000,
+#' seed = 666,
+#' abundanceDataFrameRDS = "./Output/abundanceDataFrame.RDS",
+#' weightedMomentsDataFrameRDS = "./Output/MomentsDataFrame.RDS",
+#' statPerObsDataFrameRDS = "./Output/SES_MomentsDataFrame.RDS",
+#' statPerRandDataFrameRDS = "./Output/SKRDataFrame.RDS",
+#' statSKRparam = "./Output/SES_SKRDataFrame.RDS",
+#' significanceThreshold = c(0.05, 0.95),
+#' slope_speTADs = 1,
+#' intercept_speTADs = 1.86,
+#' distance_metric = "RMSE",
+#' lin_mod = "lm"
+#' )
 
 DataAnalysisTAD <- function(
     weights,
