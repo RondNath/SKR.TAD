@@ -21,7 +21,7 @@ A “randomization” consists in swapping the lines between them (i.e. for com
 The randomization can be done by respecting a series of categorical factors (i.e. by year, fertility level, …)
 
 
-Step 2 - Function: SKR analysis of the TADs & Graphical representation
+Step 2 - Function: SKR analysis of the TADs
 ----------------------------------------------------
 -   Calculate the different moments (mean, variance, skewness, kurtosis) for all abundance matrices (observed and n randomized)
 -   Calculate deviations from the n randomization (null model) via a Confidence Interval (default: CI = 0.95%)
