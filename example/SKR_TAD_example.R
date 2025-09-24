@@ -75,7 +75,7 @@ SKR.TAD::GraphparamSKR(
 
 # IV. GLOBAL TADs ANALYSIS (Group all functions) ----
 
-SKR.TAD::GlobalTADanalysis(
+SKR.TAD::GlobalLauncher(
   Abundance = SKR.TAD::abundance[,5:102],
   AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
   TraitData = log(SKR.TAD::trait[["SLA"]] + 1),

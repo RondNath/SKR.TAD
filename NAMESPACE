@@ -2,7 +2,7 @@
 
 export(AbundanceRandomization)
 export(DataAnalysisTAD)
-export(GlobalTADanalysis)
+export(GlobalLauncher)
 export(GraphMoments)
 export(GraphSKR)
 export(GraphparamSKR)

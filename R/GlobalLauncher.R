@@ -45,7 +45,7 @@
 #' @examples
 #' head(data)
 #' head(trait)
-#' GlobalTADanalysis(
+#' GlobalLauncher(
 #' Abundance = abundance[,5:102],
 #' AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
 #' TraitData = log(trait[["SLA"]] + 1),
@@ -76,7 +76,7 @@
 #' doParallel = FALSE
 #' )
 
-GlobalTADanalysis <- function(
+GlobalLauncher <- function(
     Abundance,
     AbundanceFactor,
     TraitData,
