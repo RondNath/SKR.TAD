@@ -38,7 +38,8 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' SES of the SKR parameters (slope, intercept, Rsquare, distance from predicted TADs, distance from reference TADs & CV of the distance from reference TADs).
 #' @export
 #' @examples
-#' head(data)
+#' head(abundance)
+#' head(trait)
 #' DataAnalysisTAD(Abundance = abundance[,5:102],
 #' AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
 #' TraitData = log(trait[["SLA"]] + 1),

@@ -89,7 +89,8 @@ SES of the SKR parameters (slope, intercept, Rsquare, distance from predicted TA
 Launch the SKR analysis of the TADs, and generate output dataset (distribution moments, SKR parameters, and statistics)
 }
 \examples{
-head(data)
+head(abundance)
+head(trait)
 DataAnalysisTAD(Abundance = abundance[,5:102],
 AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
 TraitData = log(trait[["SLA"]] + 1),
