@@ -30,6 +30,7 @@ Imports:
     foreach,
     mblm (>= 0.12),
     methods,
+    grDevices,
     stats
 Suggests: 
     Cairo,
