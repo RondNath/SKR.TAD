@@ -5,48 +5,46 @@
 \title{Graph: parameters of the SKR}
 \usage{
 GraphparamSKR(
-  SKRparam,
-  statisticsFactorName,
+  SESSKRparam,
+  statisticsFactorName = NULL,
   statisticsFactorNameBreaks = NULL,
   statisticsFactorNameCol = palette(),
-  slope_speTADs = 1,
-  intercept_speTADs = 1.86,
-  saveGraphparamSKR
+  slope_ref_TADs = 1,
+  intercept_ref_TADs = 1.86,
+  path_GraphparamSKR = NULL
 )
 }
 \arguments{
+\item{SESSKRparam}{SES of SKR parameters data frame (SES and significance)}
+
 \item{statisticsFactorName}{column of data use for colors discrimination}
 
 \item{statisticsFactorNameBreaks}{vector of factor levels of the statisticsFactorName, same dimension than statisticsFactorNameCol}
 
 \item{statisticsFactorNameCol}{vector of colors, same dimension than statisticsFactorNameBreaks}
 
-\item{slope_speTADs}{slope of a specific SKR used as a baseline (default: slope_speTADs = 1; skew-uniform slope)}
+\item{slope_ref_TADs}{slope of a specific SKR used as a baseline (default: slope_ref_TADs = 1; skew-uniform slope)}
 
-\item{intercept_speTADs}{intercept of a specific SKR used as a baseline (default: intercept_speTADs = 1.86; skew-uniform intercept)}
+\item{intercept_ref_TADs}{intercept of a specific SKR used as a baseline (default: intercept_ref_TADs = 1.86; skew-uniform intercept)}
 
-\item{saveGraphparamSKR}{The path to save the graph}
-
-\item{data}{SES of SKR parameters data frame (SES and Significance)}
+\item{path_GraphparamSKR}{The path to save the graph of the SKR parameters}
 }
 \value{
-Plot of the SES SKR parameters values and significance
+Plot of the SKR parameters values and significance
 }
 \description{
 Generate and save plot with the SES SKR parameters values (observations compared to randomizations)
 }
 \examples{
-
 Example of how to use the function for grassland plant communities
 under contrasting management practices.
-
 SKR.TAD::GraphparamSKR(
-SKRparam = readRDS("./SES_SKRDataFrame.RDS"),
+SESSKRparam = readRDS("./SES_SKRDataFrame.RDS"),
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
 statisticsFactorNameCol = c("#1A85FF", "#D41159"),
-slope_speTADs = 1,
-intercept_speTADs = 1.86,
-saveGraphparamSKR = "./paramSKR.png"
+slope_ref_TADs = 1,
+intercept_ref_TADs = 1.86,
+path_GraphparamSKR = "./paramSKR.png"
 )
 }

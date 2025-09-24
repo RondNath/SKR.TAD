@@ -9,20 +9,20 @@ library(SKR.TAD)
 # II. Randomizations ----
 
 SKR.TAD::generateRandomMatrix(
-  Abundance = SKR.TAD::abundance[,5:102],
-  randomizationFactor =  SKR.TAD::abundance[,c("Year", "Bloc")],
+  Abundance = abundance[,5:102],
+  randomizationFactor =  abundance[,c("Year", "Bloc")],
   randomizationNumber = 1000,
   seed = 666,
-  path_abundanceDataFrame = "./abundanceDataFrame.RDS",
+  path_abundanceDataFrame = "./Output/abundanceDataFrame.RDS",
   doParallel = TRUE
 )
 
 # III. LAUNCH SKR ANALYSIS ----
 
-SKR.TAD::DataAnalysisTAD(
-  Abundance = SKR.TAD::abundance[,5:102],
-  AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
-  TraitData = log(SKR.TAD::trait[["SLA"]] + 1),
+DataAnalysisTAD(
+  Abundance = abundance[,5:102],
+  AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
+  TraitData = log(trait[["SLA"]] + 1),
   randomizationFactorName = c("Year", "Bloc"),
   statisticsFactorName = c("Treatment"),
   regenerate_abundanceDataFrame = T,
@@ -32,11 +32,11 @@ SKR.TAD::DataAnalysisTAD(
   regenerate_SESSKRDataFrame = T,
   randomizationNumber = 100,
   seed = 666,
-  path_abundanceDataFrame = "./abundanceDataFrame.RDS",
-  path_momentsDataFrame = "./MomentsDataFrame.RDS",
-  path_SESmomentsDataFrame = "./SES_MomentsDataFrame.RDS",
-  path_SKRDataFrame = "./SKRDataFrame.RDS",
-  path_SESSKRDataFrame = "./SES_SKRDataFrame.RDS",
+  path_abundanceDataFrame = "./Output/abundanceDataFrame.RDS",
+  path_momentsDataFrame = "./Output/MomentsDataFrame.RDS",
+  path_SESmomentsDataFrame = "./Output/SES_MomentsDataFrame.RDS",
+  path_SKRDataFrame = "./Output/SKRDataFrame.RDS",
+  path_SESSKRDataFrame = "./Output/SES_SKRDataFrame.RDS",
   significanceThreshold = c(0.05, 0.95),
   slope_ref_TADs = 1,
   intercept_ref_TADs = 1.86,
@@ -46,41 +46,41 @@ SKR.TAD::DataAnalysisTAD(
 
 # III. PLOT SKR RESULTS ----
 
-SKR.TAD::GraphMoments(
-  moments = readRDS("./MomentsDataFrame.RDS"),
-  SESmoments = readRDS("./SES_MomentsDataFrame.RDS"),
+GraphMoments(
+  moments = readRDS("./Output/MomentsDataFrame.RDS"),
+  SESmoments = readRDS("./Output/SES_MomentsDataFrame.RDS"),
   statisticsFactorName = c("Treatment"),
   statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
   statisticsFactorNameCol = c("#1A85FF", "#D41159"),
-  path_GraphMoments = "./Moments.png"
+  path_GraphMoments = "./Output/Moments.png"
 )
 
-SKR.TAD::GraphSKR(
-  moments = readRDS("./MomentsDataFrame.RDS"),
+GraphSKR(
+  moments = readRDS("./Output/MomentsDataFrame.RDS"),
   statisticsFactorName = c("Treatment"),
   statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
   statisticsFactorNameCol = c("#1A85FF", "#D41159"),
   slope_ref_TADs = 1,
   intercept_ref_TADs = 1.86,
-  path_GraphSKR = "./SKR.png"
+  path_GraphSKR = "./Output/SKR.png"
 )
 
 SKR.TAD::GraphparamSKR(
-  SESSKRparam = readRDS("./SES_SKRDataFrame.RDS"),
+  SESSKRparam = readRDS("./Output/SES_SKRDataFrame.RDS"),
   statisticsFactorName = c("Treatment"),
   statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
   statisticsFactorNameCol = c("#1A85FF", "#D41159"),
   slope_ref_TADs = 1,
   intercept_ref_TADs = 1.86,
-  path_GraphparamSKR = "./paramSKR.png"
+  path_GraphparamSKR = "./Output/paramSKR.png"
 )
 
 # IV. GLOBAL TADs ANALYSIS (Group all functions) ----
 
-GlobalTADanalysis(
-  Abundance = SKR.TAD::abundance[,5:102],
-  AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
-  TraitData = log(SKR.TAD::trait[["SLA"]] + 1),
+SKR.TAD::GlobalTADanalysis(
+  Abundance = abundance[,5:102],
+  AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
+  TraitData = log(trait[["SLA"]] + 1),
   randomizationFactorName = c("Year", "Bloc"),
   statisticsFactorName = c("Treatment"),
   statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
@@ -92,14 +92,14 @@ GlobalTADanalysis(
   regenerate_SESSKRDataFrame = T,
   randomizationNumber = 100,
   seed = 666,
-  path_abundanceDataFrame = "./abundanceDataFrame.RDS",
-  path_momentsDataFrame = "./MomentsDataFrame.RDS",
-  path_SESmomentsDataFrame = "./SES_MomentsDataFrame.RDS",
-  path_SKRDataFrame = "./SKRDataFrame.RDS",
-  path_SESSKRDataFrame = "./SES_SKRDataFrame.RDS",
-  path_GraphMoments = "./Moments.png",
-  path_GraphSKR = "./SKR.png",
-  path_GraphparamSKR = "./paramSKR.png",
+  path_abundanceDataFrame = "./Output/abundanceDataFrame.RDS",
+  path_momentsDataFrame = "./Output/MomentsDataFrame.RDS",
+  path_SESmomentsDataFrame = "./Output/SES_MomentsDataFrame.RDS",
+  path_SKRDataFrame = "./Output/SKRDataFrame.RDS",
+  path_SESSKRDataFrame = "./Output/SES_SKRDataFrame.RDS",
+  path_GraphMoments = "./Output/Moments.png",
+  path_GraphSKR = "./Output/SKR.png",
+  path_GraphparamSKR = "./Output/paramSKR.png",
   significanceThreshold = c(0.05, 0.95),
   slope_ref_TADs = 1,
   intercept_ref_TADs = 1.86,

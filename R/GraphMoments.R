@@ -12,10 +12,8 @@
 #' @returns Plot of the moments in two panels up) the moments, bottom) the SES moments values
 #' @export
 #' @examples
-#'
 #' Example of how to use the function for grassland plant communities
 #' under contrasting management practices.
-#'
 #' SKR.TAD::GraphMoments(
 #' moments = readRDS("./MomentsDataFrame.RDS"),
 #' SESmoments = readRDS("./SES_MomentsDataFrame.RDS"),

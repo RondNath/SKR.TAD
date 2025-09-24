@@ -5,18 +5,18 @@
 \title{Graph: Distribution moments}
 \usage{
 GraphMoments(
-  MOM,
-  SESMOM,
-  statisticsFactorName,
+  moments,
+  SESmoments,
+  statisticsFactorName = NULL,
   statisticsFactorNameBreaks = NULL,
   statisticsFactorNameCol = palette(),
-  saveGraphMoments
+  path_GraphMoments = NULL
 )
 }
 \arguments{
-\item{MOM}{Moments data frame (mean, variance, skewness, kurtosis)}
+\item{moments}{Moments data frame (mean, variance, skewness, kurtosis)}
 
-\item{SESMOM}{SES of the Moments data frame and significance compared to null model}
+\item{SESmoments}{SES of the Moments data frame and significance compared to null model}
 
 \item{statisticsFactorName}{column of data use for colors discrimination}
 
@@ -24,25 +24,23 @@ GraphMoments(
 
 \item{statisticsFactorNameCol}{vector of colors, same dimension than statisticsFactorNameBreaks}
 
-\item{saveGraphMoments}{The path to save the graph}
+\item{path_GraphMoments}{The path to save the graph of the moments (mean, variance, skewness and kurtosis)}
 }
 \value{
-Plot in two panels up) the moments, bottom) the SES moments values
+Plot of the moments in two panels up) the moments, bottom) the SES moments values
 }
 \description{
 Generate and save plot with moments (mean, variance, skewness & kurtosis) and SES moments values (observations compared to randomizations)
 }
 \examples{
-
 Example of how to use the function for grassland plant communities
 under contrasting management practices.
-
 SKR.TAD::GraphMoments(
-MOM = readRDS("./MomentsDataFrame.RDS"),
-SESMOM = readRDS("./SES_MomentsDataFrame.RDS"),
+moments = readRDS("./MomentsDataFrame.RDS"),
+SESmoments = readRDS("./SES_MomentsDataFrame.RDS"),
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
 statisticsFactorNameCol = c("#1A85FF", "#D41159"),
-saveGraphMoments = "./Moments.png"
+path_GraphMoments = "./Moments.png"
 )
 }

@@ -5,17 +5,17 @@
 \title{Graph: SKR}
 \usage{
 GraphSKR(
-  MOM,
-  statisticsFactorName,
+  moments,
+  statisticsFactorName = NULL,
   statisticsFactorNameBreaks = NULL,
   statisticsFactorNameCol = palette(),
-  slope_speTADs = 1,
-  intercept_speTADs = 1.86,
-  saveGraphSKR
+  slope_ref_TADs = 1,
+  intercept_ref_TADs = 1.86,
+  path_GraphSKR = NULL
 )
 }
 \arguments{
-\item{MOM}{moments data frame (mean, variance, skewness, kurtosis)}
+\item{moments}{moments data frame (mean, variance, skewness, kurtosis)}
 
 \item{statisticsFactorName}{column of data use for colors discrimination}
 
@@ -23,30 +23,28 @@ GraphSKR(
 
 \item{statisticsFactorNameCol}{vector of colors, same dimension than statisticsFactorNameBreaks}
 
-\item{slope_speTADs}{slope of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)}
+\item{slope_ref_TADs}{slope of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)}
 
-\item{intercept_speTADs}{intercept of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)}
+\item{intercept_ref_TADs}{intercept of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)}
 
-\item{saveGraphSKR}{The path to save the graph}
+\item{path_GraphSKR}{The path to save the graph of the SKR}
 }
 \value{
-Plot of the SKR and parameters for observed and randomized communities
+Plot of the SKR for observed and randomized communities in two panels left) kurtosis ~ skewness, right) kurtosis ~ skewness²
 }
 \description{
 Generate and save plot with the Skewness-Kurtosis Relationship (SKR: Kurtosis ~ slope x Skewness² + intercept)
 }
 \examples{
-
 Example of how to use the function for grassland plant communities
 under contrasting management practices.
-
 SKR.TAD::GraphSKR(
-MOM = readRDS("./MomentsDataFrame.RDS"),
+moments = readRDS("./MomentsDataFrame.RDS"),
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
 statisticsFactorNameCol = c("#1A85FF", "#D41159"),
-slope_speTADs = 1,
-intercept_speTADs = 1.86,
-saveGraphSKR = "./SKR.png"
+slope_ref_TADs = 1,
+intercept_ref_TADs = 1.86,
+path_GraphSKR = "./SKR.png"
 )
 }

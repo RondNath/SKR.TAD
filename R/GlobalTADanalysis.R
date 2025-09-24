@@ -37,19 +37,15 @@
 #' Standardized Effect Size (SES) values of the moments for observed compared to randomized communities and significance,
 #' SKR parameters for observed and randomized communities
 #' SES of the SKR parameters (slope, intercept, Rsquare, distance from predicted TADs, distance from reference TADs & CV of the distance from reference TADs).
-#'
 #' PNG graphics:
 #' Plot of the moments in two panels up) the moments, bottom) the SES moments values
 #' Plot of the SKR for observed and randomized communities in two panels left) kurtosis ~ skewness, right) kurtosis ~ skewness²
 #' Plot of the SKR parameters values and significance
-#'
 #' @export
 #' @examples
-#'
 #' Example of how to use the function, with "abundance" dataframe of grassland
 #' plant communities observed under contrasting management practices and,
 #' "trait" dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020).
-#'
 #' GlobalTADanalysis(
 #' Abundance = SKR.TAD::abundance[,5:102],
 #' AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],

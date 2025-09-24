@@ -13,10 +13,8 @@
 #' @returns Plot of the SKR for observed and randomized communities in two panels left) kurtosis ~ skewness, right) kurtosis ~ skewness²
 #' @export
 #' @examples
-#'
 #' Example of how to use the function for grassland plant communities
 #' under contrasting management practices.
-#'
 #' SKR.TAD::GraphSKR(
 #' moments = readRDS("./MomentsDataFrame.RDS"),
 #' statisticsFactorName = c("Treatment"),
@@ -94,12 +92,12 @@ GraphSKR <- function(
                       ggplot2::scale_color_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
                       ggplot2::theme_bw()+
                       ggplot2::labs(x = "Skewness²", y = "Kurtosis")+
-                      ggplot2::theme(legend.position = "bottom",
+                      ggplot2::theme(legend.position = "none",
                                      plot.title = ggplot2::element_blank(),
-                                     axis.text.y = ggplot2::element_text(size = 35),
-                                     axis.title.y = ggplot2::element_text(size = 40),
-                                     axis.title.x = ggplot2::element_text(size = 40),
-                                     axis.text.x = ggplot2::element_text(size = 35)),
+                                     axis.text.y = ggplot2::element_text(size = 20),
+                                     axis.title.y = ggplot2::element_text(size = 30),
+                                     axis.text.x = ggplot2::element_text(size = 20),
+                                     axis.title.x = ggplot2::element_text(size = 30)),
 
                     ncol = 2,
                     nrow = 1,

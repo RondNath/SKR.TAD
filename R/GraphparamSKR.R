@@ -13,10 +13,8 @@
 #' @returns Plot of the SKR parameters values and significance
 #' @export
 #' @examples
-#'
 #' Example of how to use the function for grassland plant communities
 #' under contrasting management practices.
-#'
 #' SKR.TAD::GraphparamSKR(
 #' SESSKRparam = readRDS("./SES_SKRDataFrame.RDS"),
 #' statisticsFactorName = c("Treatment"),

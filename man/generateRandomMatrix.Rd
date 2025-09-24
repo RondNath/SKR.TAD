@@ -5,24 +5,24 @@
 \title{Generate random matrix}
 \usage{
 generateRandomMatrix(
-  weights,
-  aggregationFactor = NULL,
+  Abundance,
+  randomizationFactor = NULL,
   randomizationNumber,
   seed = 123456,
-  weightsDataframeRDS = NULL,
+  path_abundanceDataFrame = NULL,
   doParallel = TRUE
 )
 }
 \arguments{
-\item{weights}{the dataframe of weights, one row correspond to a series of observation}
+\item{Abundance}{the dataframe of abundance (or related weights measure), one row correspond to a series of observation}
 
-\item{aggregationFactor}{the dataframe of factor to take into account for the randomization}
+\item{randomizationFactor}{vector of factor name for the generation of random matrix}
 
 \item{randomizationNumber}{the number of random abundance matrix to generate}
 
 \item{seed}{the seed of the pseudo random number generator}
 
-\item{weightsDataframeRDS}{the path and name of the file to save generated matrix}
+\item{path_abundanceDataFrame}{the path and name of the RDS file to load/save the dataframe which contains the observed abundance data and the generated random abundance matrix}
 
 \item{doParallel}{Indicates if we use parallelism to construct the random matrix}
 }
@@ -33,13 +33,14 @@ RDS file with the abundance of observed and randomized communities
 Generate and save random matrix
 }
 \examples{
-
 Example of how to use the function, with "abundance" dataframe
 of grassland plant communities observed under different management practices over time.
-
-generateRandomMatrix(weights = SKR.TAD::abundance[,5:102],
-aggregationFactor =  c("Year", "Bloc"),
+SKR.TAD::generateRandomMatrix(
+Abundance = SKR.TAD::abundance[,5:102],
+randomizationFactor =  SKR.TAD::abundance[,c("Year", "Bloc")],
+randomizationNumber = 1000,
 seed = 666,
-weightsDataframeRDS = "./abundanceDataFrame.RDS",
-doParallel = TRUE)
+path_abundanceDataFrame = "./abundanceDataFrame.RDS",
+doParallel = TRUE
+)
 }
