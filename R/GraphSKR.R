@@ -9,8 +9,8 @@
 #' @param statisticsFactorNameCol vector of colors, same dimension than statisticsFactorNameBreaks
 #' @param slope_ref_TADs slope of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)
 #' @param intercept_ref_TADs intercept of the theoretical distribution law (default: slope = 1 intercept = 1.86 skew-uniform)
-#' @param path_GraphSKR The path to save the graph
-#' @returns Plot of the SKR and parameters for observed and randomized communities
+#' @param path_GraphSKR The path to save the graph of the SKR
+#' @returns Plot of the SKR for observed and randomized communities in two panels left) kurtosis ~ skewness, right) kurtosis ~ skewness²
 #' @export
 #' @examples
 #'
@@ -29,12 +29,12 @@
 
 GraphSKR <- function(
     moments,
-    statisticsFactorName,
+    statisticsFactorName = NULL,
     statisticsFactorNameBreaks = NULL,
     statisticsFactorNameCol = palette(),
     slope_ref_TADs = 1,
     intercept_ref_TADs = 1.86,
-    path_GraphSKR
+    path_GraphSKR = NULL
 ) {
   ggplot2::ggsave(path_GraphSKR,
                   ggpubr::ggarrange(
@@ -49,8 +49,8 @@ GraphSKR <- function(
                                                        y = kurtosis,
                                                        col = "grey",
                                                        fill = "lightgrey"),
-                                                       alpha = 0.5,
-                                                       probs = .9)+
+                                          alpha = 0.5,
+                                          probs = .9)+
                       ggplot2::geom_point(data = moments|>
                                             dplyr::filter(Number == 0),
                                           ggplot2::aes(x = skewness, y = kurtosis,

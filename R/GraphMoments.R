@@ -8,8 +8,8 @@
 #' @param statisticsFactorName column of data use for colors discrimination
 #' @param statisticsFactorNameBreaks vector of factor levels of the statisticsFactorName, same dimension than statisticsFactorNameCol
 #' @param statisticsFactorNameCol vector of colors, same dimension than statisticsFactorNameBreaks
-#' @param path_GraphMoments The path to save the graph
-#' @returns Plot in two panels up) the moments, bottom) the SES moments values
+#' @param path_GraphMoments The path to save the graph of the moments (mean, variance, skewness and kurtosis)
+#' @returns Plot of the moments in two panels up) the moments, bottom) the SES moments values
 #' @export
 #' @examples
 #'
@@ -25,12 +25,14 @@
 #' path_GraphMoments = "./Moments.png"
 #' )
 
-GraphMoments <- function(moments,
-                         SESmoments,
-                         statisticsFactorName,
-                         statisticsFactorNameBreaks = NULL,
-                         statisticsFactorNameCol = palette(),
-                         path_GraphMoments) {
+GraphMoments <- function(
+    moments,
+    SESmoments,
+    statisticsFactorName = NULL,
+    statisticsFactorNameBreaks = NULL,
+    statisticsFactorNameCol = palette(),
+    path_GraphMoments = NULL
+) {
   ggplot2::ggsave(path_GraphMoments,
                   ggpubr::ggarrange(
                     ggplot2::ggplot()+
