@@ -34,13 +34,11 @@ Generate and save plot with moments (mean, variance, skewness & kurtosis) and SE
 }
 \examples{
 Example of how to use the function for grassland plant communities
-under contrasting management practices.
-SKR.TAD::GraphMoments(
-moments = readRDS("./MomentsDataFrame.RDS"),
-SESmoments = readRDS("./SES_MomentsDataFrame.RDS"),
+under contrasting management practices
+GraphMoments(moments = SKR.TAD::MomentsDataFrame,
+SESmoments = SKR.TAD::SES_MomentsDataFrame,
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
 statisticsFactorNameCol = c("#1A85FF", "#D41159"),
-path_GraphMoments = "./Moments.png"
-)
+path_GraphMoments = "./Moments.png")
 }

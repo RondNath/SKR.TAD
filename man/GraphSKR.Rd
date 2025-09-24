@@ -37,14 +37,12 @@ Generate and save plot with the Skewness-Kurtosis Relationship (SKR: Kurtosis ~ 
 }
 \examples{
 Example of how to use the function for grassland plant communities
-under contrasting management practices.
-SKR.TAD::GraphSKR(
-moments = readRDS("./MomentsDataFrame.RDS"),
+under contrasting management practices
+GraphSKR(moments = SKR.TAD::MomentsDataFrame,
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
 statisticsFactorNameCol = c("#1A85FF", "#D41159"),
 slope_ref_TADs = 1,
 intercept_ref_TADs = 1.86,
-path_GraphSKR = "./SKR.png"
-)
+path_GraphSKR = "./SKR.png")
 }

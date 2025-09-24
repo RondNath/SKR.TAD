@@ -38,13 +38,10 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' SES of the SKR parameters (slope, intercept, Rsquare, distance from predicted TADs, distance from reference TADs & CV of the distance from reference TADs).
 #' @export
 #' @examples
-#'
-#' Example of how to use the function, with "abundance" dataframe of grassland
-#' plant communities observed under contrasting management practices and,
-#' "trait" dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020).
-#'
-#' DataAnalysisTAD(
-#' Abundance = SKR.TAD::abundance[,5:102],
+#' Example of how to use the function, with abundance dataframe of grassland
+#' plant communities observed under contrasting management practices and
+#' trait dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020)
+#' DataAnalysisTAD(Abundance = SKR.TAD::abundance[,5:102],
 #' AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
 #' TraitData = log(SKR.TAD::trait[["SLA"]] + 1),
 #' randomizationFactorName = c("Year", "Bloc"),
@@ -65,8 +62,7 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' slope_ref_TADs = 1,
 #' intercept_ref_TADs = 1.86,
 #' distance_metric = "RMSE",
-#' lin_mod = "lm"
-#' )
+#' lin_mod = "lm")
 
 DataAnalysisTAD <- function(
     Abundance,

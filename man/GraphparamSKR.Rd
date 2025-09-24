@@ -37,14 +37,12 @@ Generate and save plot with the SES SKR parameters values (observations compared
 }
 \examples{
 Example of how to use the function for grassland plant communities
-under contrasting management practices.
-SKR.TAD::GraphparamSKR(
-SESSKRparam = readRDS("./SES_SKRDataFrame.RDS"),
+under contrasting management practices
+GraphparamSKR(SESSKRparam = SKR.TAD::SES_SKRparamDataFrame,
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
 statisticsFactorNameCol = c("#1A85FF", "#D41159"),
 slope_ref_TADs = 1,
 intercept_ref_TADs = 1.86,
-path_GraphparamSKR = "./paramSKR.png"
-)
+path_GraphparamSKR = "./paramSKR.png")
 }

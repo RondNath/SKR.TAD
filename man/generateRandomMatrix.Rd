@@ -33,14 +33,12 @@ RDS file with the abundance of observed and randomized communities
 Generate and save random matrix
 }
 \examples{
-Example of how to use the function, with "abundance" dataframe
-of grassland plant communities observed under different management practices over time.
-SKR.TAD::generateRandomMatrix(
-Abundance = SKR.TAD::abundance[,5:102],
+Example of how to use the function with abundance dataframe
+of grassland plant communities observed under different management practices over time
+generateRandomMatrix(Abundance = SKR.TAD::abundance[,5:102],
 randomizationFactor =  SKR.TAD::abundance[,c("Year", "Bloc")],
 randomizationNumber = 1000,
 seed = 666,
 path_abundanceDataFrame = "./abundanceDataFrame.RDS",
-doParallel = TRUE
-)
+doParallel = TRUE)
 }

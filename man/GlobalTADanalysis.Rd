@@ -108,11 +108,10 @@ Plot of the SKR parameters values and significance
 Launch the SKR analysis of the TADs, generate output dataset (distribution moments, SKR parameters, and statistics) and related graphics
 }
 \examples{
-Example of how to use the function, with "abundance" dataframe of grassland
-plant communities observed under contrasting management practices and,
-"trait" dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020).
-GlobalTADanalysis(
-Abundance = SKR.TAD::abundance[,5:102],
+Example of how to use the function, with abundance dataframe of grassland
+plant communities observed under contrasting management practices and
+trait dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020)
+GlobalTADanalysis(Abundance = SKR.TAD::abundance[,5:102],
 AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
 TraitData = log(SKR.TAD::trait[["SLA"]] + 1),
 randomizationFactorName = c("Year", "Bloc"),
@@ -138,6 +137,5 @@ significanceThreshold = c(0.05, 0.95),
 slope_ref_TADs = 1,
 intercept_ref_TADs = 1.86,
 distance_metric = "RMSE",
-lin_mod = "lm"
-)
+lin_mod = "lm")
 }
