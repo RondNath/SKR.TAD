@@ -1,6 +1,7 @@
 library(devtools) #devtools_2.4.5
 devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
-                         host = "https://forge.inrae.fr")
+                         host = "https://forge.inrae.fr",
+                         force = T)
 
 ## Step 2. Function: SKR ANALYSIS ----
 
