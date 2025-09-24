@@ -51,9 +51,9 @@
 #' "trait" dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020).
 #'
 #' GlobalTADanalysis(
-#' Abundance = abundance[,6:78],
-#' AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
-#' TraitData = log(trait[["SLA"]] + 1),
+#' Abundance = SKR.TAD::abundance[,5:102],
+#' AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
+#' TraitData = log(SKR.TAD::trait[["SLA"]] + 1),
 #' randomizationFactorName = c("Year", "Bloc"),
 #' statisticsFactorName = c("Treatment"),
 #' statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),

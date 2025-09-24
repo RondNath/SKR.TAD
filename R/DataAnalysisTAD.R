@@ -42,10 +42,10 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' plant communities observed under contrasting management practices and,
 #' "trait" dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020).
 #'
-#'DataAnalysisTAD(
-#' Abundance = abundance[,6:78],
-#' AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
-#' TraitData = log(trait[["SLA"]] + 1),
+#' DataAnalysisTAD(
+#' Abundance = SKR.TAD::abundance[,5:102],
+#' AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
+#' TraitData = log(SKR.TAD::trait[["SLA"]] + 1),
 #' randomizationFactorName = c("Year", "Bloc"),
 #' statisticsFactorName = c("Treatment"),
 #' regenerate_abundanceDataFrame = T,

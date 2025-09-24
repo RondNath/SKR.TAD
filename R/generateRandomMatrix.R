@@ -16,12 +16,14 @@
 #' Example of how to use the function, with "abundance" dataframe
 #' of grassland plant communities observed under different management practices over time.
 #'
-# generateRandomMatrix(Abundance = abundance[,6:78],
-#                      randomizationFactor =  abundance[,c("Year", "Bloc")],
-#                      randomizationNumber = 100,
-#                      seed = 666,
-#                      path_abundanceDataFrame = "./abundanceDataFrame.RDS",
-#                      doParallel = TRUE)
+#' SKR.TAD::generateRandomMatrix(
+#' Abundance = SKR.TAD::abundance[,5:102],
+#' randomizationFactor =  SKR.TAD::abundance[,c("Year", "Bloc")],
+#' randomizationNumber = 1000,
+#' seed = 666,
+#' path_abundanceDataFrame = "./abundanceDataFrame.RDS",
+#' doParallel = TRUE
+#' )
 
 generateRandomMatrix <- function(Abundance,
                                  randomizationFactor = NULL,
