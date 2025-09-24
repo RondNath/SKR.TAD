@@ -12,7 +12,7 @@ GlobalTADanalysis(
   randomizationFactorName = NULL,
   statisticsFactorName = NULL,
   statisticsFactorNameBreaks = NULL,
-  statisticsFactorNameCol = palette(),
+  statisticsFactorNameCol = grDevices::palette(),
   seed = 123456,
   path_abundanceDataFrame = NULL,
   path_momentsDataFrame = NULL,

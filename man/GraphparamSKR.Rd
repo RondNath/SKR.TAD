@@ -8,7 +8,7 @@ GraphparamSKR(
   SESSKRparam,
   statisticsFactorName = NULL,
   statisticsFactorNameBreaks = NULL,
-  statisticsFactorNameCol = palette(),
+  statisticsFactorNameCol = grDevices::palette(),
   slope_ref_TADs = 1,
   intercept_ref_TADs = 1.86,
   path_GraphparamSKR = NULL

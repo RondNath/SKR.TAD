@@ -269,7 +269,7 @@ DataAnalysisTAD <- function(
         # for lintr
         if(lin_mod == "lm"){
           x <- x
-          fit <- lm(y ~ x)
+          fit <- stats::lm(y ~ x)
         }else if(lin_mod == "mblm"){
           x <- x
           fit <- mblm::mblm(y ~ x)
@@ -286,7 +286,7 @@ DataAnalysisTAD <- function(
           SKRparam$distance_predicted_TADs[i * lengthFactor + j] <- mean(sqrt(fit$residuals^2), na.rm = TRUE)
           SKRparam$distance_reference_TADs[i * lengthFactor + j] <- mean(sqrt(distance_reference_TADs), na.rm = T)
         }
-        SKRparam$CV_distance_reference_TADs[i * lengthFactor + j] <- sd(sqrt(distance_reference_TADs), na.rm = T)*100/mean(sqrt(distance_reference_TADs), na.rm = T)
+        SKRparam$CV_distance_reference_TADs[i * lengthFactor + j] <- stats::sd(sqrt(distance_reference_TADs), na.rm = T)*100/mean(sqrt(distance_reference_TADs), na.rm = T)
       }
     }
 

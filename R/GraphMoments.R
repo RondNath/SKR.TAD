@@ -28,7 +28,7 @@ GraphMoments <- function(
     SESmoments,
     statisticsFactorName = NULL,
     statisticsFactorNameBreaks = NULL,
-    statisticsFactorNameCol = palette(),
+    statisticsFactorNameCol = grDevices::palette(),
     path_GraphMoments = NULL
 ) {
   ggplot2::ggsave(path_GraphMoments,

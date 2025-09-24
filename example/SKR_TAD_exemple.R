@@ -9,8 +9,8 @@ library(SKR.TAD)
 # II. Randomizations ----
 
 SKR.TAD::generateRandomMatrix(
-  Abundance = abundance[,5:102],
-  randomizationFactor =  abundance[,c("Year", "Bloc")],
+  Abundance = SKR.TAD::abundance[,5:102],
+  randomizationFactor =  SKR.TAD::abundance[,c("Year", "Bloc")],
   randomizationNumber = 1000,
   seed = 666,
   path_abundanceDataFrame = "./Output/abundanceDataFrame.RDS",
@@ -19,10 +19,10 @@ SKR.TAD::generateRandomMatrix(
 
 # III. LAUNCH SKR ANALYSIS ----
 
-DataAnalysisTAD(
-  Abundance = abundance[,5:102],
-  AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
-  TraitData = log(trait[["SLA"]] + 1),
+SKR.TAD::DataAnalysisTAD(
+  Abundance = SKR.TAD::abundance[,5:102],
+  AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
+  TraitData = log(SKR.TAD::trait[["SLA"]] + 1),
   randomizationFactorName = c("Year", "Bloc"),
   statisticsFactorName = c("Treatment"),
   regenerate_abundanceDataFrame = T,
@@ -46,7 +46,7 @@ DataAnalysisTAD(
 
 # III. PLOT SKR RESULTS ----
 
-GraphMoments(
+SKR.TAD::GraphMoments(
   moments = readRDS("./Output/MomentsDataFrame.RDS"),
   SESmoments = readRDS("./Output/SES_MomentsDataFrame.RDS"),
   statisticsFactorName = c("Treatment"),
@@ -55,7 +55,7 @@ GraphMoments(
   path_GraphMoments = "./Output/Moments.png"
 )
 
-GraphSKR(
+SKR.TAD::GraphSKR(
   moments = readRDS("./Output/MomentsDataFrame.RDS"),
   statisticsFactorName = c("Treatment"),
   statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
@@ -78,9 +78,9 @@ SKR.TAD::GraphparamSKR(
 # IV. GLOBAL TADs ANALYSIS (Group all functions) ----
 
 SKR.TAD::GlobalTADanalysis(
-  Abundance = abundance[,5:102],
-  AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
-  TraitData = log(trait[["SLA"]] + 1),
+  Abundance = SKR.TAD::abundance[,5:102],
+  AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
+  TraitData = log(SKR.TAD::trait[["SLA"]] + 1),
   randomizationFactorName = c("Year", "Bloc"),
   statisticsFactorName = c("Treatment"),
   statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),

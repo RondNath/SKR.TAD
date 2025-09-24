@@ -9,7 +9,7 @@ GraphMoments(
   SESmoments,
   statisticsFactorName = NULL,
   statisticsFactorNameBreaks = NULL,
-  statisticsFactorNameCol = palette(),
+  statisticsFactorNameCol = grDevices::palette(),
   path_GraphMoments = NULL
 )
 }
