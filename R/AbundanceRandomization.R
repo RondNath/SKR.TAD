@@ -1,7 +1,7 @@
 ## Step 1. FUNCTION: RANDOMIZATION ----
-### a. Generate random matrix ----
-#' @title Generate random matrix
-#' @description Generate and save random matrix
+### a. Abundance Randomization ----
+#' @title Abundance Randomization
+#' @description Generate and save random matrix (abundance randomization)
 #' @param Abundance the dataframe of abundance (or related weights measure), one row correspond to a series of observation
 #' @param randomizationFactor vector of factor name for the generation of random matrix
 #' @param randomizationNumber the number of random abundance matrix to generate
@@ -12,16 +12,14 @@
 #' @returns RDS file with the abundance of observed and randomized communities
 #' @export
 #' @examples
-#' Example of how to use the function with abundance dataframe
-#' of grassland plant communities observed under different management practices over time
-#' generateRandomMatrix(Abundance = SKR.TAD::abundance[,5:102],
+#' AbundanceRandomization(Abundance = SKR.TAD::abundance[,5:102],
 #' randomizationFactor =  SKR.TAD::abundance[,c("Year", "Bloc")],
 #' randomizationNumber = 1000,
 #' seed = 666,
 #' path_abundanceDataFrame = "./abundanceDataFrame.RDS",
 #' doParallel = TRUE)
 
-generateRandomMatrix <- function(Abundance,
+AbundanceRandomization <- function(Abundance,
                                  randomizationFactor = NULL,
                                  randomizationNumber,
                                  seed = 123456,

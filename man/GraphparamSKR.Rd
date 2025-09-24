@@ -36,8 +36,6 @@ Plot of the SKR parameters values and significance
 Generate and save plot with the SES SKR parameters values (observations compared to randomizations)
 }
 \examples{
-Example of how to use the function for grassland plant communities
-under contrasting management practices
 GraphparamSKR(SESSKRparam = SKR.TAD::SES_SKRparamDataFrame,
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),

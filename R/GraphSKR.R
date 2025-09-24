@@ -13,8 +13,6 @@
 #' @returns Plot of the SKR for observed and randomized communities in two panels left) kurtosis ~ skewness, right) kurtosis ~ skewness²
 #' @export
 #' @examples
-#' Example of how to use the function for grassland plant communities
-#' under contrasting management practices
 #' GraphSKR(moments = SKR.TAD::MomentsDataFrame,
 #' statisticsFactorName = c("Treatment"),
 #' statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),

@@ -36,8 +36,6 @@ Plot of the SKR for observed and randomized communities in two panels left) kurt
 Generate and save plot with the Skewness-Kurtosis Relationship (SKR: Kurtosis ~ slope x Skewness² + intercept)
 }
 \examples{
-Example of how to use the function for grassland plant communities
-under contrasting management practices
 GraphSKR(moments = SKR.TAD::MomentsDataFrame,
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),

@@ -43,9 +43,6 @@
 #' Plot of the SKR parameters values and significance
 #' @export
 #' @examples
-#' Example of how to use the function, with abundance dataframe of grassland
-#' plant communities observed under contrasting management practices and
-#' trait dataframe functional trait per species  (SLA) from TRY database (Kattge et al. 2020)
 #' GlobalTADanalysis(Abundance = SKR.TAD::abundance[,5:102],
 #' AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
 #' TraitData = log(SKR.TAD::trait[["SLA"]] + 1),

@@ -8,7 +8,7 @@ library(SKR.TAD)
 
 # II. Randomizations ----
 
-SKR.TAD::generateRandomMatrix(Abundance = SKR.TAD::abundance[,5:102],
+SKR.TAD::AbundanceRandomization(Abundance = SKR.TAD::abundance[,5:102],
   randomizationFactor =  SKR.TAD::abundance[,c("Year", "Bloc")],
   randomizationNumber = 1000,
   seed = 666,

@@ -33,8 +33,6 @@ Plot of the moments in two panels up) the moments, bottom) the SES moments value
 Generate and save plot with moments (mean, variance, skewness & kurtosis) and SES moments values (observations compared to randomizations)
 }
 \examples{
-Example of how to use the function for grassland plant communities
-under contrasting management practices
 GraphMoments(moments = SKR.TAD::MomentsDataFrame,
 SESmoments = SKR.TAD::SES_MomentsDataFrame,
 statisticsFactorName = c("Treatment"),
