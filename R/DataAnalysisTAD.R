@@ -15,13 +15,13 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' @param statisticsFactorName vector of factor name for the computation of statistics for each generated matrix
 #' @param seed the seed of the pseudo random number generator
 #' @param path_abundanceDataFrame the path and name of the RDS file to load/save the dataframe which contains the observed abundance data and the generated random abundance matrix
-#' @param path_momentsDataFrame the path and name of the RDS file to load/save the dataframe which contains the calculated moments (for observations and randomizations)
-#' @param path_SESmomentsDataFrame the path and name of the RDS file to load/save the dataframe which contains the moments standardized effect size (observations regarding randomizations)
+#' @param path_MomentsDataFrame the path and name of the RDS file to load/save the dataframe which contains the calculated moments (for observations and randomizations)
+#' @param path_SESMomentsDataFrame the path and name of the RDS file to load/save the dataframe which contains the moments standardized effect size (observations regarding randomizations)
 #' @param path_SKRDataFrame the path and name of the RDS file to load/save the dataframe which contains the SKR parameters (for observations and randomizations)
 #' @param path_SESSKRDataFrame the path and name of the RDS file to load/save the dataframe which contains the SKR parameters standardized effect size (observations regarding randomizations)
 #' @param regenerate_abundanceDataFrame boolean to specify if the abundance dataframe is computed again
-#' @param regenerate_momentsDataFrame boolean to specify if the moments dataframe is computed again
-#' @param regenerate_SESmomentsDataFrame boolean to specify if the moments standardized effect size dataframe is computed again
+#' @param regenerate_MomentsDataFrame boolean to specify if the moments dataframe is computed again
+#' @param regenerate_SESMomentsDataFrame boolean to specify if the moments standardized effect size dataframe is computed again
 #' @param regenerate_SKRDataFrame boolean to specify if the SKR parameters dataframe is computed again
 #' @param regenerate_SESSKRDataFrame boolean to specify if the SKR parameters standardized effect size dataframe is computed again
 #' @param significanceThreshold the significance threshold to consider that the observed value is in the randomized value
@@ -40,28 +40,31 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' @examples
 #' head(abundance)
 #' head(trait)
-#' DataAnalysisTAD(Abundance = abundance[,5:102],
+#' DataAnalysisTAD(
+#' Abundance = abundance[,5:102],
 #' AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
 #' TraitData = log(trait[["SLA"]] + 1),
 #' randomizationFactorName = c("Year", "Bloc"),
 #' statisticsFactorName = c("Treatment"),
 #' regenerate_abundanceDataFrame = T,
-#' regenerate_momentsDataFrame = T,
-#' regenerate_SESmomentsDataFrame = T,
+#' regenerate_MomentsDataFrame = T,
+#' regenerate_SESMomentsDataFrame = T,
 #' regenerate_SKRDataFrame = T,
 #' regenerate_SESSKRDataFrame = T,
-#' randomizationNumber = 100,
+#' randomizationNumber = 10,
 #' seed = 666,
-#' path_abundanceDataFrame = "./abundanceDataFrame.RDS",
-#' path_momentsDataFrame = "./MomentsDataFrame.RDS",
-#' path_SESmomentsDataFrame = "./SES_MomentsDataFrame.RDS",
-#' path_SKRDataFrame = "./SKRDataFrame.RDS",
-#' path_SESSKRDataFrame = "./SES_SKRDataFrame.RDS",
+#' path_abundanceDataFrame = NULL,
+#' path_MomentsDataFrame = NULL,
+#' path_SESMomentsDataFrame = NULL,
+#' path_SKRDataFrame = NULL,
+#' path_SESSKRDataFrame = NULL,
 #' significanceThreshold = c(0.05, 0.95),
 #' slope_ref_TADs = 1,
 #' intercept_ref_TADs = 1.86,
 #' distance_metric = "RMSE",
-#' lin_mod = "lm")
+#' lin_mod = "lm",
+#' doParallel = FALSE
+#' )
 
 DataAnalysisTAD <- function(
     Abundance,
@@ -72,13 +75,13 @@ DataAnalysisTAD <- function(
     statisticsFactorName = NULL,
     seed = 123456,
     path_abundanceDataFrame = NULL,
-    path_momentsDataFrame = NULL,
-    path_SESmomentsDataFrame = NULL,
+    path_MomentsDataFrame = NULL,
+    path_SESMomentsDataFrame = NULL,
     path_SKRDataFrame = NULL,
-    path_SESSKRDataFrame,
+    path_SESSKRDataFrame = NULL,
     regenerate_abundanceDataFrame = FALSE,
-    regenerate_momentsDataFrame = FALSE,
-    regenerate_SESmomentsDataFrame = FALSE,
+    regenerate_MomentsDataFrame = FALSE,
+    regenerate_SESMomentsDataFrame = FALSE,
     regenerate_SKRDataFrame = FALSE,
     regenerate_SESSKRDataFrame = FALSE,
     significanceThreshold = c(0.05, 0.95),
@@ -110,10 +113,11 @@ DataAnalysisTAD <- function(
     }
 
     abundanceDataframe <- AbundanceRandomization(Abundance = Abundance,
-                                               randomizationFactor = randomizationFactor,
-                                               randomizationNumber = randomizationNumber,
-                                               seed = seed,
-                                               path_abundanceDataFrame = path_abundanceDataFrame)
+                                                 randomizationFactor = randomizationFactor,
+                                                 randomizationNumber = randomizationNumber,
+                                                 seed = seed,
+                                                 path_abundanceDataFrame = path_abundanceDataFrame,
+                                                 doParallel = doParallel)
   }else {
     abundanceDataframe <- readRDS(file = path_abundanceDataFrame)
   }
@@ -145,63 +149,63 @@ DataAnalysisTAD <- function(
   }
 
   # Generate or load moments dataframe
-  if (is.null(path_momentsDataFrame) ||
-      (!is.null(path_momentsDataFrame) && !file.exists(path_momentsDataFrame)) ||
-      regenerate_momentsDataFrame) {
+  if (is.null(path_MomentsDataFrame) ||
+      (!is.null(path_MomentsDataFrame) && !file.exists(path_MomentsDataFrame)) ||
+      regenerate_MomentsDataFrame) {
     # Compute for each line the weighted mean, variance, skewness, kurtosis and distance to reference TADs (with the mention slope_ref_TADs and intercept_ref_TADs)
     MomentsList <-
       r4urep::weightedMVSK(data = traitData, weights = as.matrix(abundanceDataframe[, 2:(length(traitData) + 1)]))
 
     # Create a dataframe with the weighted moments and save it
-    Moments <- data.frame(matrix(data = NA, ncol = 0, nrow = nrow(abundanceDataframe)))
-    Moments$Number <- abundanceDataframe$Number
-    Moments$mean <- MomentsList[["mean"]]
-    Moments$variance <- MomentsList[["variance"]]
-    Moments$skewness <- MomentsList[["skewness"]]
-    Moments$kurtosis <- MomentsList[["kurtosis"]]
+    MomentsDataFrame <- data.frame(matrix(data = NA, ncol = 0, nrow = nrow(abundanceDataframe)))
+    MomentsDataFrame$Number <- abundanceDataframe$Number
+    MomentsDataFrame$mean <- MomentsList[["mean"]]
+    MomentsDataFrame$variance <- MomentsList[["variance"]]
+    MomentsDataFrame$skewness <- MomentsList[["skewness"]]
+    MomentsDataFrame$kurtosis <- MomentsList[["kurtosis"]]
     rm(MomentsList)
-    Moments$distance_reference_TADs <- Moments$kurtosis - (slope_ref_TADs*Moments$skewness*Moments$skewness + intercept_ref_TADs)
+    MomentsDataFrame$distance_reference_TADs <- MomentsDataFrame$kurtosis - (slope_ref_TADs*MomentsDataFrame$skewness^2 + intercept_ref_TADs)
 
-    Moments <-
+    MomentsDataFrame <-
       cbind(AbundanceFactor[rep(x = seq_len(nrow(AbundanceFactor)), times = randomizationNumber + 1), ,
                             drop = FALSE],
-            Moments)
+            MomentsDataFrame)
 
-    if (!is.null(path_momentsDataFrame)) {
-      saveRDS(object = Moments, file = path_momentsDataFrame)
+    if (!is.null(path_MomentsDataFrame)) {
+      saveRDS(object = MomentsDataFrame, file = path_MomentsDataFrame)
     }
   } else {
-    Moments <- readRDS(file = path_momentsDataFrame)
+    MomentsDataFrame <- readRDS(file = path_MomentsDataFrame)
   }
 
   # Generate or load moments standardized effect size (SES)
-  if (is.null(path_SESmomentsDataFrame) ||
-      (!is.null(path_SESmomentsDataFrame) && !file.exists(path_SESmomentsDataFrame)) ||
-      regenerate_SESmomentsDataFrame) {
+  if (is.null(path_SESMomentsDataFrame) ||
+      (!is.null(path_SESMomentsDataFrame) && !file.exists(path_SESMomentsDataFrame)) ||
+      regenerate_SESMomentsDataFrame) {
 
-      # compute moments standardized effect size (SES of mean/var/skewness/kurtosis)
-    SESMoments <- AbundanceFactor
+    # compute moments standardized effect size (SES of mean/var/skewness/kurtosis)
+    SESMomentsDataFrame <- AbundanceFactor
 
-    for (i in seq_len(nrow(SESMoments))){
-      SESMoments[i, (ncol(AbundanceFactor) + 1):(ncol(AbundanceFactor) + 4)] <-
+    for (i in seq_len(nrow(SESMomentsDataFrame))){
+      SESMomentsDataFrame[i, (ncol(AbundanceFactor) + 1):(ncol(AbundanceFactor) + 4)] <-
         r4urep::nullModelDistributionStatistics(
-          observedValue = Moments$mean[i],
-          randomValues = Moments$mean[(1:randomizationNumber) * nrow(SESMoments) + i],
+          observedValue = MomentsDataFrame$mean[i],
+          randomValues = MomentsDataFrame$mean[(1:randomizationNumber) * nrow(SESMomentsDataFrame) + i],
           significanceThreshold = significanceThreshold)
-      SESMoments[i, (ncol(AbundanceFactor) + 5):(ncol(AbundanceFactor) + 8)] <-
+      SESMomentsDataFrame[i, (ncol(AbundanceFactor) + 5):(ncol(AbundanceFactor) + 8)] <-
         r4urep::nullModelDistributionStatistics(
-          observedValue = Moments$variance[i],
-          randomValues = Moments$variance[(1:randomizationNumber) * nrow(SESMoments) + i],
+          observedValue = MomentsDataFrame$variance[i],
+          randomValues = MomentsDataFrame$variance[(1:randomizationNumber) * nrow(SESMomentsDataFrame) + i],
           significanceThreshold = significanceThreshold)
-      SESMoments[i, (ncol(AbundanceFactor) + 9):(ncol(AbundanceFactor) + 12)] <-
+      SESMomentsDataFrame[i, (ncol(AbundanceFactor) + 9):(ncol(AbundanceFactor) + 12)] <-
         r4urep::nullModelDistributionStatistics(
-          observedValue = Moments$skewness[i],
-          randomValues = Moments$skewness[(1:randomizationNumber) * nrow(SESMoments) + i],
+          observedValue = MomentsDataFrame$skewness[i],
+          randomValues = MomentsDataFrame$skewness[(1:randomizationNumber) * nrow(SESMomentsDataFrame) + i],
           significanceThreshold = significanceThreshold)
-      SESMoments[i, (ncol(AbundanceFactor) + 13):(ncol(AbundanceFactor) + 16)] <-
+      SESMomentsDataFrame[i, (ncol(AbundanceFactor) + 13):(ncol(AbundanceFactor) + 16)] <-
         r4urep::nullModelDistributionStatistics(
-          observedValue = Moments$kurtosis[i],
-          randomValues = Moments$kurtosis[(1:randomizationNumber) * nrow(SESMoments) + i],
+          observedValue = MomentsDataFrame$kurtosis[i],
+          randomValues = MomentsDataFrame$kurtosis[(1:randomizationNumber) * nrow(SESMomentsDataFrame) + i],
           significanceThreshold = significanceThreshold)
     }
 
@@ -210,15 +214,17 @@ DataAnalysisTAD <- function(
                        "SESMaxQuantile",
                        "significance")
 
-    colnames(SESMoments) <- c(colnames(AbundanceFactor),
-                                            paste0(commonColName, "Mean"),
-                                            paste0(commonColName, "Variance"),
-                                            paste0(commonColName, "Skewness"),
-                                            paste0(commonColName, "Kurtosis"))
+    colnames(SESMomentsDataFrame) <- c(colnames(AbundanceFactor),
+                                       paste0(commonColName, "mean"),
+                                       paste0(commonColName, "variance"),
+                                       paste0(commonColName, "skewness"),
+                                       paste0(commonColName, "kurtosis"))
 
-    if (!is.null(path_SESmomentsDataFrame)) {
-      saveRDS(object = SESMoments, file = path_SESmomentsDataFrame)
+    if (!is.null(path_SESMomentsDataFrame)) {
+      saveRDS(object = SESMomentsDataFrame, file = path_SESMomentsDataFrame)
     }
+  } else {
+    SESMomentsDataFrame <- readRDS(file = path_SESMomentsDataFrame)
   }
 
   # Generate or load SKR parameters dataframe
@@ -242,18 +248,18 @@ DataAnalysisTAD <- function(
     }
 
     # Generate the SKR analysis per null model regarding the factor given in parameter
-    SKRparam <- data.frame(matrix(data = NA, nrow = (randomizationNumber + 1) *
-                                               length(statisticsFactorSpeciesList), ncol = 0))
+    SKRDataFrame <- data.frame(matrix(data = NA, nrow = (randomizationNumber + 1) *
+                                        length(statisticsFactorSpeciesList), ncol = 0))
     lengthFactor <- length(names(statisticsFactorSpeciesList))
-    abundanceDataframe$skewness <- Moments$skewness
-    abundanceDataframe$kurtosis <- Moments$kurtosis
-    abundanceDataframe$distance_reference_TADs <- Moments$distance_reference_TADs
+    abundanceDataframe$skewness <- MomentsDataFrame$skewness
+    abundanceDataframe$kurtosis <- MomentsDataFrame$kurtosis
+    abundanceDataframe$distance_reference_TADs <- MomentsDataFrame$distance_reference_TADs
 
     for (i in 0:randomizationNumber) {
       for (j in 1:lengthFactor) {
-        SKRparam$Number[i * lengthFactor + j] <- i
+        SKRDataFrame$Number[i * lengthFactor + j] <- i
 
-        SKRparam[i * lengthFactor + j, statisticsFactorName] <-
+        SKRDataFrame[i * lengthFactor + j, statisticsFactorName] <-
           AbundanceFactor[which(statisticsId == names(statisticsFactorSpeciesList)[j])[1], statisticsFactorName]
 
         dfToAnalyze <- abundanceDataframe[which(x = abundanceDataframe$Number == i), ]
@@ -271,26 +277,26 @@ DataAnalysisTAD <- function(
           fit <- mblm::mblm(y ~ x)
         }
 
-        SKRparam$Slope[i * lengthFactor + j] <- fit$coefficients[2]
-        SKRparam$Intercept[i * lengthFactor + j] <- fit$coefficients[1]
-        SKRparam$Rsquare[i * lengthFactor + j] <-
+        SKRDataFrame$Slope[i * lengthFactor + j] <- fit$coefficients[2]
+        SKRDataFrame$Intercept[i * lengthFactor + j] <- fit$coefficients[1]
+        SKRDataFrame$Rsquare[i * lengthFactor + j] <-
           1 - (mean(stats::residuals(fit)^2, na.rm = TRUE) / stats::var(y, na.rm = TRUE))
         if(distance_metric == "RMSE"){
-          SKRparam$distance_predicted_TADs[i * lengthFactor + j] <- sqrt(mean(fit$residuals^2, na.rm = TRUE))
-          SKRparam$distance_reference_TADs[i * lengthFactor + j] <- sqrt(mean(distance_reference_TADs, na.rm = T))
+          SKRDataFrame$distance_predicted_TADs[i * lengthFactor + j] <- sqrt(mean(fit$residuals^2, na.rm = TRUE))
+          SKRDataFrame$distance_reference_TADs[i * lengthFactor + j] <- sqrt(mean(distance_reference_TADs, na.rm = T))
         }else if (distance_metric == "MAE"){
-          SKRparam$distance_predicted_TADs[i * lengthFactor + j] <- mean(sqrt(fit$residuals^2), na.rm = TRUE)
-          SKRparam$distance_reference_TADs[i * lengthFactor + j] <- mean(sqrt(distance_reference_TADs), na.rm = T)
+          SKRDataFrame$distance_predicted_TADs[i * lengthFactor + j] <- mean(sqrt(fit$residuals^2), na.rm = TRUE)
+          SKRDataFrame$distance_reference_TADs[i * lengthFactor + j] <- mean(sqrt(distance_reference_TADs), na.rm = T)
         }
-        SKRparam$CV_distance_reference_TADs[i * lengthFactor + j] <- stats::sd(sqrt(distance_reference_TADs), na.rm = T)*100/mean(sqrt(distance_reference_TADs), na.rm = T)
+        SKRDataFrame$CV_distance_reference_TADs[i * lengthFactor + j] <- stats::sd(sqrt(distance_reference_TADs), na.rm = T)*100/mean(sqrt(distance_reference_TADs), na.rm = T)
       }
     }
 
     if (!is.null(path_SKRDataFrame)) {
-      saveRDS(object = SKRparam, file = path_SKRDataFrame)
+      saveRDS(object = SKRDataFrame, file = path_SKRDataFrame)
     }
-  }else {
-    SKRparam <- readRDS(file = path_SKRDataFrame)
+  } else {
+    SKRDataFrame <- readRDS(file = path_SKRDataFrame)
   }
 
   # Generate or load statistics on SKR
@@ -299,38 +305,38 @@ DataAnalysisTAD <- function(
       regenerate_SESSKRDataFrame) {
 
     # compute statistics (SES) for null model for Slope, Intercept, Rsquare, distance_predicted_TADs, distance_reference_TADs, CV_distance_reference_TADs
-    SES_SKRparam <- unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))
+    SESSKRDataFrame <- unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))
 
-    for (i in seq_len(nrow(SES_SKRparam))){
-      SES_SKRparam[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 1):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 4)] <-
+    for (i in seq_len(nrow(SESSKRDataFrame))){
+      SESSKRDataFrame[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 1):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 4)] <-
         r4urep::nullModelDistributionStatistics(
-          observedValue = SKRparam$Slope[i],
-          randomValues = SKRparam$Slope[(1:randomizationNumber) * nrow(SES_SKRparam) + i],
+          observedValue = SKRDataFrame$Slope[i],
+          randomValues = SKRDataFrame$Slope[(1:randomizationNumber) * nrow(SESSKRDataFrame) + i],
           significanceThreshold = significanceThreshold)
-      SES_SKRparam[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 5):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 8)] <-
+      SESSKRDataFrame[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 5):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 8)] <-
         r4urep::nullModelDistributionStatistics(
-          observedValue = SKRparam$Intercept[i],
-          randomValues = SKRparam$Intercept[(1:randomizationNumber) * nrow(SES_SKRparam) + i],
+          observedValue = SKRDataFrame$Intercept[i],
+          randomValues = SKRDataFrame$Intercept[(1:randomizationNumber) * nrow(SESSKRDataFrame) + i],
           significanceThreshold = significanceThreshold)
-      SES_SKRparam[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 9):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 12)] <-
+      SESSKRDataFrame[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 9):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 12)] <-
         r4urep::nullModelDistributionStatistics(
-          observedValue = SKRparam$Rsquare[i],
-          randomValues = SKRparam$Rsquare[(1:randomizationNumber) * nrow(SES_SKRparam) + i],
+          observedValue = SKRDataFrame$Rsquare[i],
+          randomValues = SKRDataFrame$Rsquare[(1:randomizationNumber) * nrow(SESSKRDataFrame) + i],
           significanceThreshold = significanceThreshold)
-      SES_SKRparam[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 13):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 16)] <-
+      SESSKRDataFrame[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 13):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 16)] <-
         r4urep::nullModelDistributionStatistics(
-          observedValue = SKRparam$distance_predicted_TADs[i],
-          randomValues = SKRparam$distance_predicted_TADs[(1:randomizationNumber) * nrow(SES_SKRparam) + i],
+          observedValue = SKRDataFrame$distance_predicted_TADs[i],
+          randomValues = SKRDataFrame$distance_predicted_TADs[(1:randomizationNumber) * nrow(SESSKRDataFrame) + i],
           significanceThreshold = significanceThreshold)
-      SES_SKRparam[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 17):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 20)] <-
+      SESSKRDataFrame[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 17):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 20)] <-
         r4urep::nullModelDistributionStatistics(
-          observedValue = SKRparam$distance_reference_TADs[i],
-          randomValues = SKRparam$distance_reference_TADs[(1:randomizationNumber) * nrow(SES_SKRparam) + i],
+          observedValue = SKRDataFrame$distance_reference_TADs[i],
+          randomValues = SKRDataFrame$distance_reference_TADs[(1:randomizationNumber) * nrow(SESSKRDataFrame) + i],
           significanceThreshold = significanceThreshold)
-      SES_SKRparam[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 21):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 24)] <-
+      SESSKRDataFrame[i, (ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 21):(ncol(unique(as.data.frame(AbundanceFactor[, statisticsFactorName]))) + 24)] <-
         r4urep::nullModelDistributionStatistics(
-          observedValue = SKRparam$CV_distance_reference_TADs[i],
-          randomValues = SKRparam$CV_distance_reference_TADs[(1:randomizationNumber) * nrow(SES_SKRparam) + i],
+          observedValue = SKRDataFrame$CV_distance_reference_TADs[i],
+          randomValues = SKRDataFrame$CV_distance_reference_TADs[(1:randomizationNumber) * nrow(SESSKRDataFrame) + i],
           significanceThreshold = significanceThreshold)
     }
     commonColName <- c("SES",
@@ -338,16 +344,34 @@ DataAnalysisTAD <- function(
                        "SESMaxQuantile",
                        "significance")
 
-    colnames(SES_SKRparam) <- c(paste0(statisticsFactorName),
-                           paste0(commonColName, "Slope"),
-                           paste0(commonColName, "Intercept"),
-                           paste0(commonColName, "Rsquare"),
-                           paste0(commonColName, "distance_predicted_TADs"),
-                           paste0(commonColName, "distance_reference_TADs"),
-                           paste0(commonColName, "CV_distance_reference_TADs"))
+    colnames(SESSKRDataFrame) <- c(paste0(statisticsFactorName),
+                                   paste0(commonColName, "Slope"),
+                                   paste0(commonColName, "Intercept"),
+                                   paste0(commonColName, "Rsquare"),
+                                   paste0(commonColName, "distance_predicted_TADs"),
+                                   paste0(commonColName, "distance_reference_TADs"),
+                                   paste0(commonColName, "CV_distance_reference_TADs"))
 
     if (!is.null(path_SESSKRDataFrame)) {
-      saveRDS(object = SES_SKRparam, file = path_SESSKRDataFrame)
+      saveRDS(object = SESSKRDataFrame, file = path_SESSKRDataFrame)
     }
+  } else {
+    SESSKRDataFrame <- readRDS(file = path_SESSKRDataFrame)
   }
+
+  return(list(
+    abundanceDataFrame = abundanceDataFrame,
+    MomentsDataFrame = MomentsDataFrame,
+    SESMomentsDataFrame = SESMomentsDataFrame,
+    SKRDataFrame = SKRDataFrame,
+    SESSKRDataFrame = SESSKRDataFrame
+  ))
+
+  list(
+    abundanceDataFrame = abundanceDataFrame,
+    MomentsDataFrame = MomentsDataFrame,
+    SESMomentsDataFrame = SESMomentsDataFrame,
+    SKRDataFrame = SKRDataFrame,
+    SESSKRDataFrame = SESSKRDataFrame
+  )
 }

@@ -5,8 +5,8 @@
 \title{Graph: Distribution moments}
 \usage{
 GraphMoments(
-  moments,
-  SESmoments,
+  MomentsDataFrame,
+  SESMomentsDataFrame,
   statisticsFactorName = NULL,
   statisticsFactorNameBreaks = NULL,
   statisticsFactorNameCol = grDevices::palette(),
@@ -14,9 +14,9 @@ GraphMoments(
 )
 }
 \arguments{
-\item{moments}{Moments data frame (mean, variance, skewness, kurtosis)}
+\item{MomentsDataFrame}{Moments data frame (mean, variance, skewness, kurtosis)}
 
-\item{SESmoments}{SES of the Moments data frame and significance compared to null model}
+\item{SESMomentsDataFrame}{SES of the Moments data frame and significance compared to null model}
 
 \item{statisticsFactorName}{column of data use for colors discrimination}
 
@@ -33,10 +33,14 @@ Plot of the moments in two panels up) the moments, bottom) the SES moments value
 Generate and save plot with moments (mean, variance, skewness & kurtosis) and SES moments values (observations compared to randomizations)
 }
 \examples{
-GraphMoments(moments = SKR.TAD::MomentsDataFrame,
-SESmoments = SKR.TAD::SES_MomentsDataFrame,
+head(MomentsDataFrame)
+head(SESMomentsDataFrame)
+GraphMoments(
+MomentsDataFrame = MomentsDataFrame,
+SESMomentsDataFrame = SESMomentsDataFrame,
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
 statisticsFactorNameCol = c("#1A85FF", "#D41159"),
-path_GraphMoments = "./Moments.png")
+path_GraphMoments = NULL
+)
 }

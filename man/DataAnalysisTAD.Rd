@@ -13,13 +13,13 @@ DataAnalysisTAD(
   statisticsFactorName = NULL,
   seed = 123456,
   path_abundanceDataFrame = NULL,
-  path_momentsDataFrame = NULL,
-  path_SESmomentsDataFrame = NULL,
+  path_MomentsDataFrame = NULL,
+  path_SESMomentsDataFrame = NULL,
   path_SKRDataFrame = NULL,
-  path_SESSKRDataFrame,
+  path_SESSKRDataFrame = NULL,
   regenerate_abundanceDataFrame = FALSE,
-  regenerate_momentsDataFrame = FALSE,
-  regenerate_SESmomentsDataFrame = FALSE,
+  regenerate_MomentsDataFrame = FALSE,
+  regenerate_SESMomentsDataFrame = FALSE,
   regenerate_SKRDataFrame = FALSE,
   regenerate_SESSKRDataFrame = FALSE,
   significanceThreshold = c(0.05, 0.95),
@@ -47,9 +47,9 @@ DataAnalysisTAD(
 
 \item{path_abundanceDataFrame}{the path and name of the RDS file to load/save the dataframe which contains the observed abundance data and the generated random abundance matrix}
 
-\item{path_momentsDataFrame}{the path and name of the RDS file to load/save the dataframe which contains the calculated moments (for observations and randomizations)}
+\item{path_MomentsDataFrame}{the path and name of the RDS file to load/save the dataframe which contains the calculated moments (for observations and randomizations)}
 
-\item{path_SESmomentsDataFrame}{the path and name of the RDS file to load/save the dataframe which contains the moments standardized effect size (observations regarding randomizations)}
+\item{path_SESMomentsDataFrame}{the path and name of the RDS file to load/save the dataframe which contains the moments standardized effect size (observations regarding randomizations)}
 
 \item{path_SKRDataFrame}{the path and name of the RDS file to load/save the dataframe which contains the SKR parameters (for observations and randomizations)}
 
@@ -57,9 +57,9 @@ DataAnalysisTAD(
 
 \item{regenerate_abundanceDataFrame}{boolean to specify if the abundance dataframe is computed again}
 
-\item{regenerate_momentsDataFrame}{boolean to specify if the moments dataframe is computed again}
+\item{regenerate_MomentsDataFrame}{boolean to specify if the moments dataframe is computed again}
 
-\item{regenerate_SESmomentsDataFrame}{boolean to specify if the moments standardized effect size dataframe is computed again}
+\item{regenerate_SESMomentsDataFrame}{boolean to specify if the moments standardized effect size dataframe is computed again}
 
 \item{regenerate_SKRDataFrame}{boolean to specify if the SKR parameters dataframe is computed again}
 
@@ -91,26 +91,29 @@ Launch the SKR analysis of the TADs, and generate output dataset (distribution m
 \examples{
 head(abundance)
 head(trait)
-DataAnalysisTAD(Abundance = abundance[,5:102],
+DataAnalysisTAD(
+Abundance = abundance[,5:102],
 AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
 TraitData = log(trait[["SLA"]] + 1),
 randomizationFactorName = c("Year", "Bloc"),
 statisticsFactorName = c("Treatment"),
 regenerate_abundanceDataFrame = T,
-regenerate_momentsDataFrame = T,
-regenerate_SESmomentsDataFrame = T,
+regenerate_MomentsDataFrame = T,
+regenerate_SESMomentsDataFrame = T,
 regenerate_SKRDataFrame = T,
 regenerate_SESSKRDataFrame = T,
-randomizationNumber = 100,
+randomizationNumber = 10,
 seed = 666,
-path_abundanceDataFrame = "./abundanceDataFrame.RDS",
-path_momentsDataFrame = "./MomentsDataFrame.RDS",
-path_SESmomentsDataFrame = "./SES_MomentsDataFrame.RDS",
-path_SKRDataFrame = "./SKRDataFrame.RDS",
-path_SESSKRDataFrame = "./SES_SKRDataFrame.RDS",
+path_abundanceDataFrame = NULL,
+path_MomentsDataFrame = NULL,
+path_SESMomentsDataFrame = NULL,
+path_SKRDataFrame = NULL,
+path_SESSKRDataFrame = NULL,
 significanceThreshold = c(0.05, 0.95),
 slope_ref_TADs = 1,
 intercept_ref_TADs = 1.86,
 distance_metric = "RMSE",
-lin_mod = "lm")
+lin_mod = "lm",
+doParallel = FALSE
+)
 }

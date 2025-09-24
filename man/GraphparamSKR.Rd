@@ -5,7 +5,7 @@
 \title{Graph: parameters of the SKR}
 \usage{
 GraphparamSKR(
-  SESSKRparam,
+  SESSKRDataFrame,
   statisticsFactorName = NULL,
   statisticsFactorNameBreaks = NULL,
   statisticsFactorNameCol = grDevices::palette(),
@@ -15,7 +15,7 @@ GraphparamSKR(
 )
 }
 \arguments{
-\item{SESSKRparam}{SES of SKR parameters data frame (SES and significance)}
+\item{SESSKRDataFrame}{SES of SKR parameters data frame (SES and significance)}
 
 \item{statisticsFactorName}{column of data use for colors discrimination}
 
@@ -36,11 +36,14 @@ Plot of the SKR parameters values and significance
 Generate and save plot with the SES SKR parameters values (observations compared to randomizations)
 }
 \examples{
-GraphparamSKR(SESSKRparam = SKR.TAD::SES_SKRparamDataFrame,
+head(SESSKRDataFrame)
+GraphparamSKR(
+SESSKRDataFrame = SESSKRDataFrame,
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
 statisticsFactorNameCol = c("#1A85FF", "#D41159"),
 slope_ref_TADs = 1,
 intercept_ref_TADs = 1.86,
-path_GraphparamSKR = "./paramSKR.png")
+path_GraphparamSKR = NULL
+)
 }

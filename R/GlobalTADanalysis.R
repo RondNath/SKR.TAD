@@ -12,16 +12,16 @@
 #' @param statisticsFactorNameCol vector of colors, same dimension than statisticsFactorNameBreaks
 #' @param seed the seed of the pseudo random number generator
 #' @param path_abundanceDataFrame the path and name of the RDS file to load/save the dataframe which contains the observed abundance data and the generated random abundance matrix
-#' @param path_momentsDataFrame the path and name of the RDS file to load/save the dataframe which contains the calculated moments (for observations and randomizations)
-#' @param path_SESmomentsDataFrame the path and name of the RDS file to load/save the dataframe which contains the moments standardized effect size (observations regarding randomizations)
+#' @param path_MomentsDataFrame the path and name of the RDS file to load/save the dataframe which contains the calculated moments (for observations and randomizations)
+#' @param path_SESMomentsDataFrame the path and name of the RDS file to load/save the dataframe which contains the moments standardized effect size (observations regarding randomizations)
 #' @param path_SKRDataFrame the path and name of the RDS file to load/save the dataframe which contains the SKR parameters (for observations and randomizations)
 #' @param path_SESSKRDataFrame the path and name of the RDS file to load/save the dataframe which contains the SKR parameters standardized effect size (observations regarding randomizations)
 #' @param path_GraphMoments The path to save the graph of the moments (mean, variance, skewness and kurtosis)
 #' @param path_GraphSKR The path to save the graph of the SKR
 #' @param path_GraphparamSKR The path to save the graph of the SKR parameters
 #' @param regenerate_abundanceDataFrame boolean to specify if the abundance dataframe is computed again
-#' @param regenerate_momentsDataFrame boolean to specify if the moments dataframe is computed again
-#' @param regenerate_SESmomentsDataFrame boolean to specify if the moments standardized effect size dataframe is computed again
+#' @param regenerate_MomentsDataFrame boolean to specify if the moments dataframe is computed again
+#' @param regenerate_SESMomentsDataFrame boolean to specify if the moments standardized effect size dataframe is computed again
 #' @param regenerate_SKRDataFrame boolean to specify if the SKR parameters dataframe is computed again
 #' @param regenerate_SESSKRDataFrame boolean to specify if the SKR parameters standardized effect size dataframe is computed again
 #' @param significanceThreshold the significance threshold to consider that the observed value is in the randomized value
@@ -43,33 +43,38 @@
 #' Plot of the SKR parameters values and significance
 #' @export
 #' @examples
-#' GlobalTADanalysis(Abundance = SKR.TAD::abundance[,5:102],
-#' AbundanceFactor = SKR.TAD::abundance[,c("Year", "Plot", "Treatment", "Bloc")],
-#' TraitData = log(SKR.TAD::trait[["SLA"]] + 1),
+#' head(data)
+#' head(trait)
+#' GlobalTADanalysis(
+#' Abundance = abundance[,5:102],
+#' AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
+#' TraitData = log(trait[["SLA"]] + 1),
 #' randomizationFactorName = c("Year", "Bloc"),
 #' statisticsFactorName = c("Treatment"),
 #' statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
 #' statisticsFactorNameCol = c("#1A85FF", "#D41159"),
 #' regenerate_abundanceDataFrame = T,
-#' regenerate_momentsDataFrame = T,
-#' regenerate_SESmomentsDataFrame = T,
+#' regenerate_MomentsDataFrame = T,
+#' regenerate_SESMomentsDataFrame = T,
 #' regenerate_SKRDataFrame = T,
 #' regenerate_SESSKRDataFrame = T,
-#' randomizationNumber = 100,
+#' randomizationNumber = 10,
 #' seed = 666,
-#' path_abundanceDataFrame = "./abundanceDataFrame.RDS",
-#' path_momentsDataFrame = "./MomentsDataFrame.RDS",
-#' path_SESmomentsDataFrame = "./SES_MomentsDataFrame.RDS",
-#' path_SKRDataFrame = "./SKRDataFrame.RDS",
-#' path_SESSKRDataFrame = "./SES_SKRDataFrame.RDS",
-#' path_GraphMoments = "./Moments.png",
-#' path_GraphSKR = "./SKR.png",
-#' path_GraphparamSKR = "./paramSKR.png",
+#' path_abundanceDataFrame = NULL,
+#' path_MomentsDataFrame = NULL,
+#' path_SESMomentsDataFrame = NULL,
+#' path_SKRDataFrame = NULL,
+#' path_SESSKRDataFrame = NULL,
+#' path_GraphMoments = NULL,
+#' path_GraphSKR = NULL,
+#' path_GraphparamSKR = NULL,
 #' significanceThreshold = c(0.05, 0.95),
 #' slope_ref_TADs = 1,
 #' intercept_ref_TADs = 1.86,
 #' distance_metric = "RMSE",
-#' lin_mod = "lm")
+#' lin_mod = "lm",
+#' doParallel = FALSE
+#' )
 
 GlobalTADanalysis <- function(
     Abundance,
@@ -82,16 +87,16 @@ GlobalTADanalysis <- function(
     statisticsFactorNameCol = grDevices::palette(),
     seed = 123456,
     path_abundanceDataFrame = NULL,
-    path_momentsDataFrame = NULL,
-    path_SESmomentsDataFrame = NULL,
+    path_MomentsDataFrame = NULL,
+    path_SESMomentsDataFrame = NULL,
     path_SKRDataFrame = NULL,
     path_SESSKRDataFrame = NULL,
     path_GraphMoments = NULL,
     path_GraphSKR = NULL,
     path_GraphparamSKR = NULL,
     regenerate_abundanceDataFrame = FALSE,
-    regenerate_momentsDataFrame = FALSE,
-    regenerate_SESmomentsDataFrame = FALSE,
+    regenerate_MomentsDataFrame = FALSE,
+    regenerate_SESMomentsDataFrame = FALSE,
     regenerate_SKRDataFrame = FALSE,
     regenerate_SESSKRDataFrame = FALSE,
     significanceThreshold = c(0.05, 0.95),
@@ -101,60 +106,56 @@ GlobalTADanalysis <- function(
     intercept_ref_TADs = 1.86,
     distance_metric = "RMSE"
 ){
-
-  DataAnalysisTAD(
-    Abundance = Abundance,
-    AbundanceFactor = AbundanceFactor,
-    TraitData = TraitData,
-    randomizationNumber = randomizationNumber,
-    randomizationFactorName = randomizationFactorName,
-    statisticsFactorName = statisticsFactorName,
-    seed = seed,
-    path_abundanceDataFrame = path_abundanceDataFrame,
-    path_momentsDataFrame = path_momentsDataFrame,
-    path_SESmomentsDataFrame = path_SESmomentsDataFrame,
-    path_SKRDataFrame = path_SKRDataFrame,
-    path_SESSKRDataFrame = path_SESSKRDataFrame,
-    regenerate_abundanceDataFrame = regenerate_abundanceDataFrame,
-    regenerate_momentsDataFrame = regenerate_momentsDataFrame,
-    regenerate_SESmomentsDataFrame = regenerate_SESmomentsDataFrame,
-    regenerate_SKRDataFrame = regenerate_SKRDataFrame,
-    regenerate_SESSKRDataFrame = regenerate_SESSKRDataFrame,
-    significanceThreshold = significanceThreshold,
-    doParallel = doParallel,
-    lin_mod = lin_mod,
-    slope_ref_TADs = slope_ref_TADs,
-    intercept_ref_TADs = intercept_ref_TADs,
-    distance_metric = distance_metric
-  )
-
-  GraphMoments(
-    moments = readRDS(path_momentsDataFrame),
-    SESmoments = readRDS(path_SESmomentsDataFrame),
-    statisticsFactorName = statisticsFactorName,
-    statisticsFactorNameBreaks = statisticsFactorNameBreaks,
-    statisticsFactorNameCol = statisticsFactorNameCol,
-    path_GraphMoments = path_GraphMoments
-  )
-
-  GraphSKR(
-    moments = readRDS(path_momentsDataFrame),
-    statisticsFactorName = statisticsFactorName,
-    statisticsFactorNameBreaks = statisticsFactorNameBreaks,
-    statisticsFactorNameCol = statisticsFactorNameCol,
-    slope_ref_TADs = slope_ref_TADs,
-    intercept_ref_TADs = intercept_ref_TADs,
-    path_GraphSKR = path_GraphSKR
-  )
-
-  GraphparamSKR(
-    SESSKRparam = readRDS(path_SESSKRDataFrame),
-    statisticsFactorName = statisticsFactorName,
-    statisticsFactorNameBreaks = statisticsFactorNameBreaks,
-    statisticsFactorNameCol = statisticsFactorNameCol,
-    slope_ref_TADs = slope_ref_TADs,
-    intercept_ref_TADs = intercept_ref_TADs,
-    path_GraphparamSKR = path_GraphparamSKR
-  )
-
+  return(list(
+    DataAnalysisTAD(
+      Abundance = Abundance,
+      AbundanceFactor = AbundanceFactor,
+      TraitData = TraitData,
+      randomizationNumber = randomizationNumber,
+      randomizationFactorName = randomizationFactorName,
+      statisticsFactorName = statisticsFactorName,
+      seed = seed,
+      path_abundanceDataFrame = path_abundanceDataFrame,
+      path_MomentsDataFrame = path_MomentsDataFrame,
+      path_SESMomentsDataFrame = path_SESMomentsDataFrame,
+      path_SKRDataFrame = path_SKRDataFrame,
+      path_SESSKRDataFrame = path_SESSKRDataFrame,
+      regenerate_abundanceDataFrame = regenerate_abundanceDataFrame,
+      regenerate_MomentsDataFrame = regenerate_MomentsDataFrame,
+      regenerate_SESMomentsDataFrame = regenerate_SESMomentsDataFrame,
+      regenerate_SKRDataFrame = regenerate_SKRDataFrame,
+      regenerate_SESSKRDataFrame = regenerate_SESSKRDataFrame,
+      significanceThreshold = significanceThreshold,
+      doParallel = doParallel,
+      lin_mod = lin_mod,
+      slope_ref_TADs = slope_ref_TADs,
+      intercept_ref_TADs = intercept_ref_TADs,
+      distance_metric = distance_metric
+    ),
+    GraphMoments(
+      MomentsDataFrame = MomentsDataFrame,
+      SESMomentsDataFrame = SESMomentsDataFrame,
+      statisticsFactorName = statisticsFactorName,
+      statisticsFactorNameBreaks = statisticsFactorNameBreaks,
+      statisticsFactorNameCol = statisticsFactorNameCol,
+      path_GraphMoments = path_GraphMoments
+    ),
+    GraphSKR(
+      MomentsDataFrame = MomentsDataFrame,
+      statisticsFactorName = statisticsFactorName,
+      statisticsFactorNameBreaks = statisticsFactorNameBreaks,
+      statisticsFactorNameCol = statisticsFactorNameCol,
+      slope_ref_TADs = slope_ref_TADs,
+      intercept_ref_TADs = intercept_ref_TADs,
+      path_GraphSKR = path_GraphSKR
+    ),
+    GraphparamSKR(
+      SESSKRDataFrame = SESSKRDataFrame,
+      statisticsFactorName = statisticsFactorName,
+      statisticsFactorNameBreaks = statisticsFactorNameBreaks,
+      statisticsFactorNameCol = statisticsFactorNameCol,
+      slope_ref_TADs = slope_ref_TADs,
+      intercept_ref_TADs = intercept_ref_TADs,
+      path_GraphparamSKR = path_GraphparamSKR
+    )))
 }

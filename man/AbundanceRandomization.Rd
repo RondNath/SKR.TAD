@@ -33,10 +33,13 @@ RDS file with the abundance of observed and randomized communities
 Generate and save random matrix (abundance randomization)
 }
 \examples{
-AbundanceRandomization(Abundance = SKR.TAD::abundance[,5:102],
-randomizationFactor =  SKR.TAD::abundance[,c("Year", "Bloc")],
+head(abundance)
+AbundanceRandomization(
+Abundance = abundance[,5:102],
+randomizationFactor = abundance[,c("Year", "Bloc")],
 randomizationNumber = 1000,
 seed = 666,
-path_abundanceDataFrame = "./abundanceDataFrame.RDS",
-doParallel = TRUE)
+path_abundanceDataFrame = NULL,
+doParallel = FALSE
+)
 }

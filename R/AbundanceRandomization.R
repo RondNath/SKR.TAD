@@ -1,5 +1,6 @@
 ## Step 1. FUNCTION: RANDOMIZATION ----
 ### a. Abundance Randomization ----
+
 #' @title Abundance Randomization
 #' @description Generate and save random matrix (abundance randomization)
 #' @param Abundance the dataframe of abundance (or related weights measure), one row correspond to a series of observation
@@ -12,19 +13,24 @@
 #' @returns RDS file with the abundance of observed and randomized communities
 #' @export
 #' @examples
-#' AbundanceRandomization(Abundance = SKR.TAD::abundance[,5:102],
-#' randomizationFactor =  SKR.TAD::abundance[,c("Year", "Bloc")],
+#' head(abundance)
+#' AbundanceRandomization(
+#' Abundance = abundance[,5:102],
+#' randomizationFactor = abundance[,c("Year", "Bloc")],
 #' randomizationNumber = 1000,
 #' seed = 666,
-#' path_abundanceDataFrame = "./abundanceDataFrame.RDS",
-#' doParallel = TRUE)
+#' path_abundanceDataFrame = NULL,
+#' doParallel = FALSE
+#' )
 
-AbundanceRandomization <- function(Abundance,
-                                 randomizationFactor = NULL,
-                                 randomizationNumber,
-                                 seed = 123456,
-                                 path_abundanceDataFrame = NULL,
-                                 doParallel = TRUE) {
+AbundanceRandomization <- function(
+    Abundance,
+    randomizationFactor = NULL,
+    randomizationNumber,
+    seed = 123456,
+    path_abundanceDataFrame = NULL,
+    doParallel = TRUE
+) {
 
   if (!is.null(randomizationFactor) && nrow(Abundance) != nrow(randomizationFactor)) {
     stop("Abundance and randomizationFactor must have the same number of rows !")
@@ -56,6 +62,11 @@ AbundanceRandomization <- function(Abundance,
   # Initialization of the parallelization if doParallel is true
   if (doParallel == TRUE) {
     nc <- parallel::detectCores()
+    cl <- parallel::makeCluster(nc)
+    on.exit(expr = parallel::stopCluster(cl), add = TRUE)
+    doParallel::registerDoParallel(cl)
+  }else{
+    nc <- 1
     cl <- parallel::makeCluster(nc)
     on.exit(expr = parallel::stopCluster(cl), add = TRUE)
     doParallel::registerDoParallel(cl)

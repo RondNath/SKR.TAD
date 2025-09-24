@@ -30,13 +30,13 @@
 #' @source from the function of the package: "DataAnalysisTAD"
 "MomentsDataFrame"
 
-#' SES_MomentsDataFrame: moments statistics analysis
+#' SESMomentsDataFrame: moments statistics analysis
 #'
 #' DataFrame which contains the moments standardized effect size (observations regarding randomizations) and statistics, computed from "MomentsDataFrame"
 #'
 #' @format DataFrame with 20 columns: `Year`, `Plot`, `Treatment`, `Bloc`, `SESMean`, `SESMinQuantileMean`, `SESMaxQuantileMean`, `significanceMean`, `SESVariance`, `SESMinQuantileVariance`, `SESMaxQuantileVariance`, `significanceVariance`, `SESSkewness`, `SESMinQuantileSkewness`, `SESMaxQuantileSkewness`, `significanceSkewness`, `SESKurtosis`, `SESMinQuantileKurtosis`, `SESMaxQuantileKurtosis`, `significanceKurtosis`
 #' @source from the function of the package: "DataAnalysisTAD"
-"SES_MomentsDataFrame"
+"SESMomentsDataFrame"
 
 #' SKRDataFrame: SKR parameters
 #'
@@ -46,10 +46,10 @@
 #' @source from the function of the package: "DataAnalysisTAD"
 "SKRDataFrame"
 
-#' SES_SKRDataFrame: SKR parameters statistics analysis
+#' SESSKRDataFrame: SKR parameters statistics analysis
 #'
 #' DataFrame which contains the SKR parameters standardized effect size (observations regarding randomizations) and statistics, computed from "SKRDataFrame"
 #'
 #' @format DataFrame with 25 columns: `Treatment`, `SESSlope`, `SESMinQuantileSlope`, `SESMaxQuantileSlope`, `significanceSlope`, `SESIntercept`, `SESMinQuantileIntercept`, `SESMaxQuantileIntercept`, `significanceIntercept`, `SESRsquare`, `SESMinQuantileRsquare`, `SESMaxQuantileRsquare`, `significanceRsquare`, `SESdistance_predicted_TADs`, `SESMinQuantiledistance_predicted_TADs`, `SESMaxQuantiledistance_predicted_TADs`, `significancedistance_predicted_TADs`, `SESdistance_reference_TADs`, `SESMinQuantiledistance_reference_TADs`, `SESMaxQuantiledistance_reference_TADs`, `significancedistance_reference_TADs`, `SESCVdistance_reference_TADs`, `SESMinQuantileCV_distance_reference_TADs`, `SESMaxQuantileCV_distance_reference_TADs`, `significanceCV_distance_reference_TADs`
 #' @source from the function of the package: "DataAnalysisTAD"
-"SES_SKRDataFrame"
+"SESSKRDataFrame"

@@ -5,7 +5,7 @@
 \title{Graph: SKR}
 \usage{
 GraphSKR(
-  moments,
+  MomentsDataFrame,
   statisticsFactorName = NULL,
   statisticsFactorNameBreaks = NULL,
   statisticsFactorNameCol = grDevices::palette(),
@@ -15,7 +15,7 @@ GraphSKR(
 )
 }
 \arguments{
-\item{moments}{moments data frame (mean, variance, skewness, kurtosis)}
+\item{MomentsDataFrame}{moments data frame (mean, variance, skewness, kurtosis)}
 
 \item{statisticsFactorName}{column of data use for colors discrimination}
 
@@ -36,11 +36,14 @@ Plot of the SKR for observed and randomized communities in two panels left) kurt
 Generate and save plot with the Skewness-Kurtosis Relationship (SKR: Kurtosis ~ slope x Skewness² + intercept)
 }
 \examples{
-GraphSKR(moments = SKR.TAD::MomentsDataFrame,
+head(MomentsDataFrame)
+GraphSKR(
+MomentsDataFrame = MomentsDataFrame,
 statisticsFactorName = c("Treatment"),
 statisticsFactorNameBreaks = c("Mown_Unfertilized", "Mown_NPK"),
 statisticsFactorNameCol = c("#1A85FF", "#D41159"),
 slope_ref_TADs = 1,
 intercept_ref_TADs = 1.86,
-path_GraphSKR = "./SKR.png")
+path_GraphSKR = NULL
+)
 }
