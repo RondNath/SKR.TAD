@@ -102,7 +102,7 @@ predicted TADs", title_dist_reference_TADs, paste0("CV ", title_dist_reference_T
                    axis.text.y = ggplot2::element_text(size = 10),
                    axis.title.y = ggplot2::element_text(size = 12, face = "bold"),
                    axis.title.x = ggplot2::element_blank(),
-                   axis.text.x = ggplot2::element_text(size = 8, face = "bold"))
+                   axis.text.x = ggplot2::element_text(size = 6, face = "bold"))
 
   if (!is.null(path_GraphparamSKR)) {
     message("Save SKR parameters plot", path_GraphparamSKR)
