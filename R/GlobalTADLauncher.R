@@ -1,4 +1,4 @@
-## Step 4. Global TADs analysis ----
+## Step 4. Global TADs analysis - Launcher ----
 
 #' @title Global laucher for TADs analysis (group all functions of the package)
 #' @description Launch the SKR analysis of the TADs, generate output dataset (distribution moments, SKR parameters, and statistics) and related graphics
@@ -45,7 +45,7 @@
 #' @examples
 #' head(data)
 #' head(trait)
-#' GlobalLauncher(
+#' GlobalTADLauncher(
 #' Abundance = abundance[,5:102],
 #' AbundanceFactor = abundance[,c("Year", "Plot", "Treatment", "Bloc")],
 #' TraitData = log(trait[["SLA"]] + 1),
@@ -76,7 +76,7 @@
 #' doParallel = FALSE
 #' )
 
-GlobalLauncher <- function(
+GlobalTADLauncher <- function(
     Abundance,
     AbundanceFactor,
     TraitData,
