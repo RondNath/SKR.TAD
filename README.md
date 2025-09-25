@@ -14,15 +14,15 @@ The development version on Github can be installed using the devtools package:
 devtools::install_github("RondNath/SKR.TAD")
 
 
-Step 1 - Function: Randomize the abundances
----------------------------------
+Step 1 - Function: Randomize the abundances - "AbundanceRandomization"
+---
 A “randomization” consists in swapping the lines between them (i.e. for community ecology, thus keeping the abundance structure and the number of species constant). This randomization must be carried out n times.
 
 The randomization can be done by respecting a series of categorical factors (i.e. by year, fertility level, …)
 
 
-Step 2 - Function: SKR analysis of the TADs
-----------------------------------------------------
+Step 2 - Function: SKR analysis of the TADs - "DataAnalysisTAD"
+---
 -   Calculate the different moments (mean, variance, skewness, kurtosis) for all abundance matrices (observed and n randomized)
 -   Calculate deviations from the n randomization (null model) via a Confidence Interval (default: CI = 0.95%)
 -   It is allowed to change the significance thresholds
@@ -38,8 +38,14 @@ Step 2 - Function: SKR analysis of the TADs
 -   Get the confidence interval for each parameter and compare it to the null envelope
 
   
-Step 3 - Function: Graphical representation of the SKR and parameters
-----------------------------------------------------
+Step 3 - Function: Graphical representation of the SKR and parameters - "GraphMoments", "GraphSKR", "GraphparamSKR"
+---
 - Graphical representation of the observed moments relative to random moments
 - Graphical representation of the SKR (Kurtosis ~ Skewness²)
 - Graphical representation of the observed SKR parameters (linear regression parameters) compared to the randomized parameters
+
+Step 4 - Function: Global TAD analysis, combines the previous 3 steps - "GlobalTADLauncher"  
+---
+- Randomize the abundance
+- SKR analysis of the TADs
+- Graphical representation of the moments, SKR and parameters
