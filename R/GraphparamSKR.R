@@ -92,7 +92,7 @@ predicted TADs", y = SESdistance_predicted_TADs, fill = !!rlang::sym(statisticsF
 predicted TADs", y = SESdistance_predicted_TADs, fill = !!rlang::sym(statisticsFactorName)),
                         alpha = 0.2, size = 6, color = "black", shape = 21)+
     ggplot2::scale_x_discrete(limits = c("Slope", "Intercept", "R²", "Distance from
- predicted TADs", title_dist_reference_TADs, paste0("CV ", title_dist_reference_TADs)))+
+predicted TADs", title_dist_reference_TADs, paste0("CV ", title_dist_reference_TADs)))+
     ggplot2::scale_fill_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
     ggplot2::scale_color_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
     ggplot2::theme_bw()+
