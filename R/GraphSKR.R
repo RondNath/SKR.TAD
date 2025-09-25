@@ -51,14 +51,11 @@ GraphSKR <- function(
       ggplot2::geom_point(data = MomentsDataFrame|>
                             dplyr::filter(Number == 0),
                           ggplot2::aes(x = skewness, y = kurtosis,
-                                       col = !!rlang::sym(statisticsFactorName),
                                        fill = !!rlang::sym(statisticsFactorName)),
                           alpha = 0.6,
                           size = 5,
                           shape = 21)+
       ggplot2::scale_fill_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
-      ggplot2::scale_color_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
-      guides(color = "none")+
       ggplot2::theme_bw()+
       ggplot2::labs(x = "Skewness", y = "Kurtosis")+
       ggplot2::theme(legend.position = "bottom",
@@ -92,7 +89,6 @@ GraphSKR <- function(
       ggplot2::scale_color_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
       ggplot2::theme_bw()+
       ggplot2::labs(x = "Skewness²", y = "Kurtosis")+
-      guides(color = "none")+
       ggplot2::theme(legend.position = "none",
                      plot.title = ggplot2::element_blank(),
                      axis.text.y = ggplot2::element_text(size = 20),
