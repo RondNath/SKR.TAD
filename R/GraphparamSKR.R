@@ -98,7 +98,7 @@ K = ", slope_ref_TADs, " x S² + ", intercept_ref_TADs)
                    axis.text.y = ggplot2::element_text(size = 10),
                    axis.title.y = ggplot2::element_text(size = 12, face = "bold"),
                    axis.title.x = ggplot2::element_blank(),
-                   axis.text.x = ggplot2::element_text(size = 10, face = "bold"))
+                   axis.text.x = ggplot2::element_text(size = 5, face = "bold"))
 
   if (!is.null(path_GraphparamSKR)) {
     message("Save SKR parameters plot", path_GraphparamSKR)

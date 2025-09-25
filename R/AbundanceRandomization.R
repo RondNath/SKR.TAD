@@ -97,6 +97,7 @@ AbundanceRandomization <- function(
   }
   # save the result
   if (!is.null(path_abundanceDataFrame)) {
+    message("Save abundanceDataframe", path_abundanceDataFrame)
     saveRDS(abundanceDataframe, file = path_abundanceDataFrame)
   }
 

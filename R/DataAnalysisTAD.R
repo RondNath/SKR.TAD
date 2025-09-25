@@ -172,6 +172,7 @@ DataAnalysisTAD <- function(
             MomentsDataFrame)
 
     if (!is.null(path_MomentsDataFrame)) {
+      message("Save MomentsDataFrame", path_MomentsDataFrame)
       saveRDS(object = MomentsDataFrame, file = path_MomentsDataFrame)
     }
   } else {
@@ -221,6 +222,7 @@ DataAnalysisTAD <- function(
                                        paste0(commonColName, "kurtosis"))
 
     if (!is.null(path_SESMomentsDataFrame)) {
+      message("Save SESMomentsDataFrame", path_SESMomentsDataFrame)
       saveRDS(object = SESMomentsDataFrame, file = path_SESMomentsDataFrame)
     }
   } else {
@@ -293,6 +295,7 @@ DataAnalysisTAD <- function(
     }
 
     if (!is.null(path_SKRDataFrame)) {
+      message("Save SKRDataFrame", path_SKRDataFrame)
       saveRDS(object = SKRDataFrame, file = path_SKRDataFrame)
     }
   } else {
@@ -353,6 +356,7 @@ DataAnalysisTAD <- function(
                                    paste0(commonColName, "CV_distance_reference_TADs"))
 
     if (!is.null(path_SESSKRDataFrame)) {
+      message("Save SESSKRDataFrame", path_SESSKRDataFrame)
       saveRDS(object = SESSKRDataFrame, file = path_SESSKRDataFrame)
     }
   } else {

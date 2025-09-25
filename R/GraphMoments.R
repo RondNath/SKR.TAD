@@ -46,13 +46,13 @@ GraphMoments <- function(
       ggplot2::theme_bw()+
       ggplot2::labs(y = "Moments")+
       ggplot2::theme(plot.title = ggplot2::element_blank(),
-                     axis.text.y = ggplot2::element_text(size = 20),
-                     axis.title.y = ggplot2::element_text(size = 30),
+                     axis.text.y = ggplot2::element_text(size = 10),
+                     axis.title.y = ggplot2::element_text(size = 15),
                      axis.text.x = ggplot2::element_blank(),
                      axis.title.x = ggplot2::element_blank(),
-                     legend.title = ggplot2::element_text(size = 30, face = "bold"),
-                     legend.text = ggplot2::element_text(size = 30),
-                     legend.key.size = ggplot2::unit(1.5, 'cm')),
+                     legend.title = ggplot2::element_text(size = 15, face = "bold"),
+                     legend.text = ggplot2::element_text(size = 15),
+                     legend.key.size = ggplot2::unit(1, 'cm')),
     ggplot2::ggplot()+
       ggplot2::geom_boxplot(data = MomentsDataFrame |>
                               dplyr::filter(Number > 0),
@@ -67,13 +67,13 @@ GraphMoments <- function(
       ggplot2::theme_bw()+
       ggplot2::labs(y = "Moments")+
       ggplot2::theme(plot.title = ggplot2::element_blank(),
-                     axis.text.y = ggplot2::element_text(size = 20),
+                     axis.text.y = ggplot2::element_text(size = 10),
                      axis.title.y = ggplot2::element_blank(),
                      axis.text.x = ggplot2::element_blank(),
                      axis.title.x = ggplot2::element_blank(),
-                     legend.title = ggplot2::element_text(size = 30, face = "bold"),
-                     legend.text = ggplot2::element_text(size = 30),
-                     legend.key.size = ggplot2::unit(1.5, 'cm')),
+                     legend.title = ggplot2::element_text(size = 15, face = "bold"),
+                     legend.text = ggplot2::element_text(size = 15),
+                     legend.key.size = ggplot2::unit(1, 'cm')),
     ggplot2::ggplot()+
       ggplot2::geom_boxplot(data = MomentsDataFrame |>
                               dplyr::filter(Number > 0),
@@ -88,13 +88,13 @@ GraphMoments <- function(
       ggplot2::theme_bw()+
       ggplot2::labs(y = "Moments")+
       ggplot2::theme(plot.title = ggplot2::element_blank(),
-                     axis.text.y = ggplot2::element_text(size = 20),
+                     axis.text.y = ggplot2::element_text(size = 10),
                      axis.title.y = ggplot2::element_blank(),
                      axis.text.x = ggplot2::element_blank(),
                      axis.title.x = ggplot2::element_blank(),
-                     legend.title = ggplot2::element_text(size = 30, face = "bold"),
-                     legend.text = ggplot2::element_text(size = 30),
-                     legend.key.size = ggplot2::unit(1.5, 'cm')),
+                     legend.title = ggplot2::element_text(size = 15, face = "bold"),
+                     legend.text = ggplot2::element_text(size = 15),
+                     legend.key.size = ggplot2::unit(1, 'cm')),
     ggplot2::ggplot()+
       ggplot2::geom_boxplot(data = MomentsDataFrame |>
                               dplyr::filter(Number > 0),
@@ -109,13 +109,13 @@ GraphMoments <- function(
       ggplot2::theme_bw()+
       ggplot2::labs(y = "Moments")+
       ggplot2::theme(plot.title = ggplot2::element_blank(),
-                     axis.text.y = ggplot2::element_text(size = 20),
+                     axis.text.y = ggplot2::element_text(size = 10),
                      axis.title.y = ggplot2::element_blank(),
                      axis.text.x = ggplot2::element_blank(),
                      axis.title.x = ggplot2::element_blank(),
-                     legend.title = ggplot2::element_text(size = 30, face = "bold"),
-                     legend.text = ggplot2::element_text(size = 30),
-                     legend.key.size = ggplot2::unit(1.5, 'cm')),
+                     legend.title = ggplot2::element_text(size = 15, face = "bold"),
+                     legend.text = ggplot2::element_text(size = 15),
+                     legend.key.size = ggplot2::unit(1, 'cm')),
     ggplot2::ggplot()+
       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
       ggplot2::geom_point(data = SESMomentsDataFrame |>
@@ -131,13 +131,13 @@ GraphMoments <- function(
       ggplot2::theme_bw()+
       ggplot2::labs(y = paste0("SES ", "Moments"))+
       ggplot2::theme(plot.title = ggplot2::element_blank(),
-                     axis.text.y = ggplot2::element_text(size = 20),
-                     axis.title.y = ggplot2::element_text(size = 30),
-                     axis.text.x = ggplot2::element_text(size = 20),
+                     axis.text.y = ggplot2::element_text(size = 10),
+                     axis.title.y = ggplot2::element_text(size = 15),
+                     axis.text.x = ggplot2::element_text(size = 10),
                      axis.title.x = ggplot2::element_blank(),
-                     legend.title = ggplot2::element_text(size = 30, face = "bold"),
-                     legend.text = ggplot2::element_text(size = 30),
-                     legend.key.size = ggplot2::unit(1.5, 'cm')),
+                     legend.title = ggplot2::element_text(size = 15, face = "bold"),
+                     legend.text = ggplot2::element_text(size = 15),
+                     legend.key.size = ggplot2::unit(1, 'cm')),
     ggplot2::ggplot()+
       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
       ggplot2::geom_point(data = SESMomentsDataFrame |>
@@ -153,13 +153,13 @@ GraphMoments <- function(
       ggplot2::theme_bw()+
       ggplot2::labs()+
       ggplot2::theme(plot.title = ggplot2::element_blank(),
-                     axis.text.y = ggplot2::element_text(size = 20),
+                     axis.text.y = ggplot2::element_text(size = 10),
                      axis.title.y = ggplot2::element_blank(),
-                     axis.text.x = ggplot2::element_text(size = 20),
+                     axis.text.x = ggplot2::element_text(size = 10),
                      axis.title.x = ggplot2::element_blank(),
-                     legend.title = ggplot2::element_text(size = 30, face = "bold"),
-                     legend.text = ggplot2::element_text(size = 30),
-                     legend.key.size = ggplot2::unit(1.5, 'cm')),
+                     legend.title = ggplot2::element_text(size = 15, face = "bold"),
+                     legend.text = ggplot2::element_text(size = 15),
+                     legend.key.size = ggplot2::unit(1, 'cm')),
     ggplot2::ggplot()+
       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
       ggplot2::geom_point(data = SESMomentsDataFrame |>
@@ -175,13 +175,13 @@ GraphMoments <- function(
       ggplot2::theme_bw()+
       ggplot2::labs()+
       ggplot2::theme(plot.title = ggplot2::element_blank(),
-                     axis.text.y = ggplot2::element_text(size = 20),
+                     axis.text.y = ggplot2::element_text(size = 10),
                      axis.title.y = ggplot2::element_blank(),
-                     axis.text.x = ggplot2::element_text(size = 20),
+                     axis.text.x = ggplot2::element_text(size = 10),
                      axis.title.x = ggplot2::element_blank(),
-                     legend.title = ggplot2::element_text(size = 30, face = "bold"),
-                     legend.text = ggplot2::element_text(size = 30),
-                     legend.key.size = ggplot2::unit(1.5, 'cm')),
+                     legend.title = ggplot2::element_text(size = 15, face = "bold"),
+                     legend.text = ggplot2::element_text(size = 15),
+                     legend.key.size = ggplot2::unit(1, 'cm')),
     ggplot2::ggplot()+
       ggplot2::geom_abline(intercept = 0, slope = 0, color = "grey", linewidth = 1, linetype = "dashed")+
       ggplot2::geom_point(data = SESMomentsDataFrame |>
@@ -197,13 +197,13 @@ GraphMoments <- function(
       ggplot2::theme_bw()+
       ggplot2::labs()+
       ggplot2::theme(plot.title = ggplot2::element_blank(),
-                     axis.text.y = ggplot2::element_text(size = 20),
+                     axis.text.y = ggplot2::element_text(size = 10),
                      axis.title.y = ggplot2::element_blank(),
-                     axis.text.x = ggplot2::element_text(size = 20),
+                     axis.text.x = ggplot2::element_text(size = 10),
                      axis.title.x = ggplot2::element_blank(),
-                     legend.title = ggplot2::element_text(size = 30, face = "bold"),
-                     legend.text = ggplot2::element_text(size = 30),
-                     legend.key.size = ggplot2::unit(1.5, 'cm')),
+                     legend.title = ggplot2::element_text(size = 15, face = "bold"),
+                     legend.text = ggplot2::element_text(size = 15),
+                     legend.key.size = ggplot2::unit(1, 'cm')),
     ncol = 4,
     nrow = 2,
     common.legend = T,
