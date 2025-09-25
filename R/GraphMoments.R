@@ -211,6 +211,7 @@ GraphMoments <- function(
   )
 
   if (!is.null(path_GraphMoments)) {
+    message("Save Moments plot", path_GraphMoments)
     ggplot2::ggsave(
       path_GraphMoments,
       GraphMoments,
@@ -219,5 +220,6 @@ GraphMoments <- function(
       height = 8
     )
   }
-  return(GraphMoments)
+
+  GraphMoments
 }

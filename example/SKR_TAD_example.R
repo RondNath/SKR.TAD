@@ -97,7 +97,7 @@ SKR.TAD::GlobalTADLauncher(
   path_SESSKRDataFrame = "./Output/SESSKRDataFrame.RDS",
   path_GraphMoments = "./Output/Moments.png",
   path_GraphSKR = "./Output/SKR.png",
-  path_GraphparamSKR = "./Output/paramSKR.png",
+  path_GraphparamSKR = "./Output/SKRparam.png",
   significanceThreshold = c(0.05, 0.95),
   slope_ref_TADs = 1,
   intercept_ref_TADs = 1.86,

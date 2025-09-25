@@ -106,56 +106,64 @@ GlobalTADLauncher <- function(
     intercept_ref_TADs = 1.86,
     distance_metric = "RMSE"
 ){
-  return(list(
-    DataAnalysisTAD(
-      Abundance = Abundance,
-      AbundanceFactor = AbundanceFactor,
-      TraitData = TraitData,
-      randomizationNumber = randomizationNumber,
-      randomizationFactorName = randomizationFactorName,
-      statisticsFactorName = statisticsFactorName,
-      seed = seed,
-      path_abundanceDataFrame = path_abundanceDataFrame,
-      path_MomentsDataFrame = path_MomentsDataFrame,
-      path_SESMomentsDataFrame = path_SESMomentsDataFrame,
-      path_SKRDataFrame = path_SKRDataFrame,
-      path_SESSKRDataFrame = path_SESSKRDataFrame,
-      regenerate_abundanceDataFrame = regenerate_abundanceDataFrame,
-      regenerate_MomentsDataFrame = regenerate_MomentsDataFrame,
-      regenerate_SESMomentsDataFrame = regenerate_SESMomentsDataFrame,
-      regenerate_SKRDataFrame = regenerate_SKRDataFrame,
-      regenerate_SESSKRDataFrame = regenerate_SESSKRDataFrame,
-      significanceThreshold = significanceThreshold,
-      doParallel = doParallel,
-      lin_mod = lin_mod,
-      slope_ref_TADs = slope_ref_TADs,
-      intercept_ref_TADs = intercept_ref_TADs,
-      distance_metric = distance_metric
-    ),
-    GraphMoments(
-      MomentsDataFrame = MomentsDataFrame,
-      SESMomentsDataFrame = SESMomentsDataFrame,
-      statisticsFactorName = statisticsFactorName,
-      statisticsFactorNameBreaks = statisticsFactorNameBreaks,
-      statisticsFactorNameCol = statisticsFactorNameCol,
-      path_GraphMoments = path_GraphMoments
-    ),
-    GraphSKR(
-      MomentsDataFrame = MomentsDataFrame,
-      statisticsFactorName = statisticsFactorName,
-      statisticsFactorNameBreaks = statisticsFactorNameBreaks,
-      statisticsFactorNameCol = statisticsFactorNameCol,
-      slope_ref_TADs = slope_ref_TADs,
-      intercept_ref_TADs = intercept_ref_TADs,
-      path_GraphSKR = path_GraphSKR
-    ),
-    GraphparamSKR(
-      SESSKRDataFrame = SESSKRDataFrame,
-      statisticsFactorName = statisticsFactorName,
-      statisticsFactorNameBreaks = statisticsFactorNameBreaks,
-      statisticsFactorNameCol = statisticsFactorNameCol,
-      slope_ref_TADs = slope_ref_TADs,
-      intercept_ref_TADs = intercept_ref_TADs,
-      path_GraphparamSKR = path_GraphparamSKR
-    )))
+
+  result <- DataAnalysisTAD(
+    Abundance = Abundance,
+    AbundanceFactor = AbundanceFactor,
+    TraitData = TraitData,
+    randomizationNumber = randomizationNumber,
+    randomizationFactorName = randomizationFactorName,
+    statisticsFactorName = statisticsFactorName,
+    seed = seed,
+    path_abundanceDataFrame = path_abundanceDataFrame,
+    path_MomentsDataFrame = path_MomentsDataFrame,
+    path_SESMomentsDataFrame = path_SESMomentsDataFrame,
+    path_SKRDataFrame = path_SKRDataFrame,
+    path_SESSKRDataFrame = path_SESSKRDataFrame,
+    regenerate_abundanceDataFrame = regenerate_abundanceDataFrame,
+    regenerate_MomentsDataFrame = regenerate_MomentsDataFrame,
+    regenerate_SESMomentsDataFrame = regenerate_SESMomentsDataFrame,
+    regenerate_SKRDataFrame = regenerate_SKRDataFrame,
+    regenerate_SESSKRDataFrame = regenerate_SESSKRDataFrame,
+    significanceThreshold = significanceThreshold,
+    doParallel = doParallel,
+    lin_mod = lin_mod,
+    slope_ref_TADs = slope_ref_TADs,
+    intercept_ref_TADs = intercept_ref_TADs,
+    distance_metric = distance_metric
+  )
+
+  MomentsDataFrame <- result$MomentsDataFrame
+  SESMomentsDataFrame <- result$SESMomentsDataFrame
+  SKRDataFrame <- result$SKRDataFrame
+  SESSKRDataFrame <- result$SESSKRDataFrame
+
+  GraphMoments(
+    MomentsDataFrame = MomentsDataFrame,
+    SESMomentsDataFrame = SESMomentsDataFrame,
+    statisticsFactorName = statisticsFactorName,
+    statisticsFactorNameBreaks = statisticsFactorNameBreaks,
+    statisticsFactorNameCol = statisticsFactorNameCol,
+    path_GraphMoments = path_GraphMoments
+  )
+
+  GraphSKR(
+    MomentsDataFrame = MomentsDataFrame,
+    statisticsFactorName = statisticsFactorName,
+    statisticsFactorNameBreaks = statisticsFactorNameBreaks,
+    statisticsFactorNameCol = statisticsFactorNameCol,
+    slope_ref_TADs = slope_ref_TADs,
+    intercept_ref_TADs = intercept_ref_TADs,
+    path_GraphSKR = path_GraphSKR
+  )
+
+  GraphparamSKR(
+    SESSKRDataFrame = SESSKRDataFrame,
+    statisticsFactorName = statisticsFactorName,
+    statisticsFactorNameBreaks = statisticsFactorNameBreaks,
+    statisticsFactorNameCol = statisticsFactorNameCol,
+    slope_ref_TADs = slope_ref_TADs,
+    intercept_ref_TADs = intercept_ref_TADs,
+    path_GraphparamSKR = path_GraphparamSKR
+  )
 }
