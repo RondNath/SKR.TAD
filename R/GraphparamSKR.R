@@ -100,8 +100,6 @@ K = ", slope_ref_TADs, " x S² + ", intercept_ref_TADs)
                    axis.title.x = ggplot2::element_blank(),
                    axis.text.x = ggplot2::element_text(size = 10, face = "bold"))
 
-  return(GraphparamSKR)
-
   if (!is.null(path_GraphparamSKR)) {
     ggplot2::ggsave(
       path_GraphparamSKR,
@@ -111,4 +109,5 @@ K = ", slope_ref_TADs, " x S² + ", intercept_ref_TADs)
       height = 5
     )
   }
+  return(GraphparamSKR)
 }

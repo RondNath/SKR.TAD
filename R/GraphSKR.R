@@ -103,8 +103,6 @@ GraphSKR <- function(
     common.legend = T,
     legend = "bottom")
 
-  return(GraphSKR)
-
   if (!is.null(path_GraphSKR)) {
     ggplot2::ggsave(
       path_GraphSKR,
@@ -114,4 +112,5 @@ GraphSKR <- function(
       width = 15
     )
   }
+  return(GraphSKR)
 }

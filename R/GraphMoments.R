@@ -210,8 +210,6 @@ GraphMoments <- function(
     legend = "bottom"
   )
 
-  return(GraphMoments)
-
   if (!is.null(path_GraphMoments)) {
     ggplot2::ggsave(
       path_GraphMoments,
@@ -221,4 +219,5 @@ GraphMoments <- function(
       height = 8
     )
   }
+  return(GraphMoments)
 }
