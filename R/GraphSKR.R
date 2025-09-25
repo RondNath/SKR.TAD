@@ -57,6 +57,7 @@ GraphSKR <- function(
                           shape = 21)+
       ggplot2::scale_fill_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
       ggplot2::theme_bw()+
+      ggplot2::guides(color = "none")+
       ggplot2::labs(x = "Skewness", y = "Kurtosis")+
       ggplot2::theme(legend.position = "bottom",
                      axis.text.y = ggplot2::element_text(size = 20),

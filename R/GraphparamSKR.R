@@ -34,7 +34,8 @@ GraphparamSKR <- function(
     path_GraphparamSKR = NULL
 ) {
 
-  title_dist_reference_TADs <- paste0("Distance from reference TADs:
+  title_dist_reference_TADs <- paste0("Distance from
+reference TADs:
 K = ", slope_ref_TADs, " x S² + ", intercept_ref_TADs)
 
 
@@ -82,13 +83,16 @@ K = ", slope_ref_TADs, " x S² + ", intercept_ref_TADs)
                         alpha = 0.2, size = 6, color = "black", shape = 21)+
     ggplot2::geom_point(data = SESSKRDataFrame |>
                           dplyr::filter(significancedistance_predicted_TADs == TRUE),
-                        ggplot2::aes(x =  "Distance from predicted TADs", y = SESdistance_predicted_TADs, fill = !!rlang::sym(statisticsFactorName)),
+                        ggplot2::aes(x =  "Distance from
+predicted TADs", y = SESdistance_predicted_TADs, fill = !!rlang::sym(statisticsFactorName)),
                         alpha = 0.8, size = 6, color = "black", shape = 21)+
     ggplot2::geom_point(data = SESSKRDataFrame |>
                           dplyr::filter(significancedistance_predicted_TADs == FALSE),
-                        ggplot2::aes(x =  "Distance from predicted TADs", y = SESdistance_predicted_TADs, fill = !!rlang::sym(statisticsFactorName)),
+                        ggplot2::aes(x =  "Distance from
+predicted TADs", y = SESdistance_predicted_TADs, fill = !!rlang::sym(statisticsFactorName)),
                         alpha = 0.2, size = 6, color = "black", shape = 21)+
-    ggplot2::scale_x_discrete(limits = c("Slope", "Intercept", "R²", "Distance from predicted TADs", title_dist_reference_TADs, paste0("CV ", title_dist_reference_TADs)))+
+    ggplot2::scale_x_discrete(limits = c("Slope", "Intercept", "R²", "Distance from
+ predicted TADs", title_dist_reference_TADs, paste0("CV ", title_dist_reference_TADs)))+
     ggplot2::scale_fill_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
     ggplot2::scale_color_manual(limits = statisticsFactorNameBreaks, values = statisticsFactorNameCol)+
     ggplot2::theme_bw()+
@@ -98,7 +102,7 @@ K = ", slope_ref_TADs, " x S² + ", intercept_ref_TADs)
                    axis.text.y = ggplot2::element_text(size = 10),
                    axis.title.y = ggplot2::element_text(size = 12, face = "bold"),
                    axis.title.x = ggplot2::element_blank(),
-                   axis.text.x = ggplot2::element_text(size = 5, face = "bold"))
+                   axis.text.x = ggplot2::element_text(size = 7, face = "bold"))
 
   if (!is.null(path_GraphparamSKR)) {
     message("Save SKR parameters plot", path_GraphparamSKR)
