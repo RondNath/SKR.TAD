@@ -29,12 +29,11 @@ Step 2 - Function: SKR analysis of the TADs - "DataAnalysisTAD"
 -   Calculate the SKR for the observations and the null model
 -   Extract the parameters
     -   R²
-    -   TADstab (RMSE)
-    -   intercept (alpha)
-    -   slope (beta)
+    -   Y-intercept
+    -   Slope
+    -   distance from predited distribution family (Slope and Y-intercept predicted)
     -   distance to a reference distribution family (default TADeve, skew-uniform family (slope = 1; intercept = 1.86))
-    -   conditional probabilities
-    -   Null envelope
+
 -   Get the confidence interval for each parameter and compare it to the null envelope
 
   
