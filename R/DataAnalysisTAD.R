@@ -30,6 +30,7 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' @param intercept_ref_TADs intercept of a reference SKR used as a baseline (default: intercept_ref_TADs = 1.86; skew-uniform intercept)
 #' @param lin_mod Indicates the type of linear model to use for (SKR): choose "lm" or "mblm"
 #' @param distance_metric Indicates the method to compute distance-based regression parameters: choose "RMSE" (for Root Mean Square Error, default) or "MAE" (for Mean Absolute Error)
+#' @param log_distance Logical. If `TRUE`, the error metrics (RMSE, MAE) are computed on the log-transformed distances between observed and predicted kurtosis values.
 #' @returns RDS files with:
 #' abundance for observed and randomized communities,
 #' moments (mean, variance, skewness & kurtosis) for observed and randomized communities,
@@ -63,6 +64,7 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
 #' intercept_ref_TADs = 1.86,
 #' distance_metric = "RMSE",
 #' lin_mod = "lm",
+#' log_distance = FALSE,
 #' doParallel = FALSE
 #' )
 
@@ -89,7 +91,8 @@ DataAnalysisTAD <- function(
     lin_mod = "lm",
     slope_ref_TADs = 1,
     intercept_ref_TADs = 1.86,
-    distance_metric = "RMSE"
+    distance_metric = "RMSE",
+    log_distance = FALSE
 ) {
 
   # preliminary test on input data
@@ -268,7 +271,6 @@ DataAnalysisTAD <- function(
         dfToAnalyze <- dfToAnalyze[which(x = statisticsId == names(statisticsFactorSpeciesList)[j]), ]
         y <- dfToAnalyze$kurtosis
         x <- dfToAnalyze$skewness^2
-        distance_reference_TADs <- dfToAnalyze$distance_reference_TADs^2
 
         # for lintr
         if(lin_mod == "lm"){
@@ -279,18 +281,34 @@ DataAnalysisTAD <- function(
           fit <- mblm::mblm(y ~ x)
         }
 
+        y_pred <- fitted(fit)
+        y_pred_ref <- slope_ref_TADs * x + intercept_ref_TADs
+        residuals_fit <- stats::residuals(fit)
+
         SKRDataFrame$Slope[i * lengthFactor + j] <- fit$coefficients[2]
         SKRDataFrame$Intercept[i * lengthFactor + j] <- fit$coefficients[1]
         SKRDataFrame$Rsquare[i * lengthFactor + j] <-
-          1 - (mean(stats::residuals(fit)^2, na.rm = TRUE) / stats::var(y, na.rm = TRUE))
-        if(distance_metric == "RMSE"){
-          SKRDataFrame$distance_predicted_TADs[i * lengthFactor + j] <- sqrt(mean(fit$residuals^2, na.rm = TRUE))
-          SKRDataFrame$distance_reference_TADs[i * lengthFactor + j] <- sqrt(mean(distance_reference_TADs, na.rm = T))
-        }else if (distance_metric == "MAE"){
-          SKRDataFrame$distance_predicted_TADs[i * lengthFactor + j] <- mean(sqrt(fit$residuals^2), na.rm = TRUE)
-          SKRDataFrame$distance_reference_TADs[i * lengthFactor + j] <- mean(sqrt(distance_reference_TADs), na.rm = T)
+          1 - (mean(residuals_fit^2, na.rm = TRUE) / stats::var(y, na.rm = TRUE))
+
+        if (distance_metric == "RMSE") {
+          if (!log_distance) {
+            SKRDataFrame$distance_predicted_TADs[i * lengthFactor + j] <- sqrt(mean(residuals_fit^2, na.rm = TRUE))
+            SKRDataFrame$distance_reference_TADs[i * lengthFactor + j] <- sqrt(mean((y - y_pred_ref)^2, na.rm = TRUE))
+          } else {
+            SKRDataFrame$distance_predicted_TADs[i * lengthFactor + j] <- sqrt(mean((log(y + 1) - log(y_pred + 1))^2, na.rm = TRUE))
+            SKRDataFrame$distance_reference_TADs[i * lengthFactor + j] <- sqrt(mean((log(y + 1) - log(y_pred_ref + 1))^2, na.rm = TRUE))
+          }
+        } else if (distance_metric == "MAE") {
+          if (!log_distance) {
+            SKRDataFrame$distance_predicted_TADs[i * lengthFactor + j] <- mean(abs(residuals_fit), na.rm = TRUE)
+            SKRDataFrame$distance_reference_TADs[i * lengthFactor + j] <- mean(abs(y - y_pred_ref), na.rm = TRUE)
+          } else {
+            SKRDataFrame$distance_predicted_TADs[i * lengthFactor + j] <- mean(abs(log(y + 1) - log(y_pred + 1)), na.rm = TRUE)
+            SKRDataFrame$distance_reference_TADs[i * lengthFactor + j] <- mean(abs(log(y + 1) - log(y_pred_ref + 1)), na.rm = TRUE)
+          }
         }
-        SKRDataFrame$CV_distance_reference_TADs[i * lengthFactor + j] <- stats::sd(sqrt(distance_reference_TADs), na.rm = T)*100/mean(sqrt(distance_reference_TADs), na.rm = T)
+
+        SKRDataFrame$CV_distance_reference_TADs[i * lengthFactor + j] <- sd(abs(y - y_pred_ref), na.rm = TRUE) * 100 / mean(abs(y - y_pred_ref), na.rm = TRUE)
       }
     }
 
