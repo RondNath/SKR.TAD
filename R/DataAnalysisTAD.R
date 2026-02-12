@@ -4,7 +4,6 @@ devtools::install_gitlab(repo = "urep/dev_utils/r_utils/r4urep",
                          force = T)
 
 ## Step 2. Function: SKR ANALYSIS ----
-
 #' @title Launch the analysis of the TADs with the SKR framework
 #' @description Launch the SKR analysis of the TADs, and generate output dataset (distribution moments, SKR parameters, and statistics)
 #' @param Abundance the dataframe of abundance (or related weights measure), one row correspond to a series of observation
